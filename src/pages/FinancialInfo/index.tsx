@@ -3,6 +3,7 @@ import { Table, Button, Space } from 'antd';
 import { useModel } from '@umijs/max';
 import { API } from '@/types/financialInfo';
 import type { ColumnsType } from 'antd/es/table';
+import { PageContainer } from '@ant-design/pro-components';
 
 const FinancialInfo: React.FC = () => {
     const { financial, fetchList } = useModel('financial');
@@ -103,12 +104,14 @@ const FinancialInfo: React.FC = () => {
     };
 
     return (
-        <Table
-            columns={columns}
-            dataSource={financial.list}
-            rowKey={(record) => record.amountLoanLimit} // Đảm bảo ID là duy nhất
-            pagination={{ total: financial.totalRecords, pageSize: 12 }}
-        />
+        <PageContainer>
+            <Table
+                columns={columns}
+                dataSource={financial.list}
+                rowKey={(record) => record.amountLoanLimit} // Đảm bảo ID là duy nhất
+                pagination={{ total: financial.totalRecords, pageSize: 12 }}
+            />
+        </PageContainer>
     );
 };
 

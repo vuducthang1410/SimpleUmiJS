@@ -34,6 +34,10 @@ export default defineConfig({
       path: '/loan-product',
       component: './LoanProduct',
     },
+    {
+      path: '/loan-products/create',
+      component: '@/pages/LoanProduct/create',
+    },
   ],
   npmClient: 'pnpm',
 });
