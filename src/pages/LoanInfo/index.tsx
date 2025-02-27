@@ -3,8 +3,8 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Modal, Input } from 'antd';
 import { Button, message, Table } from 'antd';
 import { getLoanApplicants, updateLoanDisbursementStatus } from '@/services/loan/info'; // Giả sử bạn đã định nghĩa hàm này trong dịch vụ
-import { useNavigate } from 'umi';
 import { Select } from 'antd';
+import { useNavigate } from '@umijs/max';
 interface LoanApplicant {
     fullName: string;
     formDeftRepayment: string;
@@ -63,7 +63,6 @@ const LoanApplicants: React.FC = () => {
         console.log('search:', value);
     };
     const showNoteModal = (id: string, status: 'APPROVED' | 'REJECTED') => {
-        console.log("first")
         setCurrentLoanId(id);
         setCurrentStatus(status);
         setIsModalVisible(true);

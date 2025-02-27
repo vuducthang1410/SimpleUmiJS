@@ -1,35 +1,76 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Table, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { LoanProduct } from '@/services/LoanProduct/loanProduct';
+import { LoanProductRp } from '@/types/LoanProductModel';
+import { NotificationType } from '@/types/NotificationType';
+import { APIResponseLoanProduct } from '@/services/LoanProduct/loanProduct';
+import { history } from '@umijs/max';
 
 interface LoanProductTableProps {
-    data: LoanProduct[];
+    data: LoanProductRp[];
     loading: boolean;
+    deleteLoanProductById: (id: string) => Promise<void>
+    openNotificationWithIcon: (type: NotificationType, title: string, description: string) => void;
 }
 
-const LoanProductTable: React.FC<LoanProductTableProps> = ({ data, loading }) => {
-    const handleViewDetail = (record: LoanProduct) => {
-        alert(`Chi tiết sản phẩm: ${record.productName}\nHạn mức: ${record.loanLimit} đ`);
+const LoanProductTable: React.FC<LoanProductTableProps> = ({ data, loading, deleteLoanProductById, openNotificationWithIcon }) => {
+    const handleViewDetail = async (record: LoanProductRp) => {
+        history.push(`/loan-product/detail/${record.productId}`, record.productId);
     };
-    const columns: ColumnsType<LoanProduct> = [
+    const handleDelete = (record: LoanProductRp) => {
+        deleteLoanProductById(record.productId);
+        openNotificationWithIcon(NotificationType.success, "Xóa sản phẩm thành công", `Đã xóa sản phẩm ${record.productName}`);
+    };
+    const columns: ColumnsType<LoanProductRp> = [
         { title: 'STT', dataIndex: 'index', key: 'index', render: (_, __, index) => index + 1 },
         { title: 'Tên Sản Phẩm', dataIndex: 'productName', key: 'productName' },
         { title: 'Loại Hình Vay', dataIndex: 'formLoan', key: 'formLoan' },
         { title: 'Hạn Mức Vay', dataIndex: 'loanLimit', key: 'loanLimit' },
         { title: 'Thời Hạn Vay', dataIndex: 'termLimit', key: 'termLimit' },
+        { title: 'Đối Tượng Áp Dụng', dataIndex: 'applicableObjects', key: 'applicable' },
         { title: 'Ngày Tạo', dataIndex: 'createdDate', key: 'createdDate' },
+
         {
+            title: 'Thao Tác',
+            render: (_, record) => ((record.isActive == false) ?
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button
+                        type="primary"
+                        style={{ backgroundColor: 'blue', borderColor: 'blue', marginRight: 8 }}
+                        onClick={() => alert(`Chỉnh sửa sản phẩm: ${record.productName}`)}
+                    >
+                        Sửa
+                    </Button>
+                    <Button
+                        type="primary"
+                        style={{ backgroundColor: 'red', borderColor: 'red', marginRight: 8 }}
+                        onClick={() => handleDelete(record)}
+                    >
+                        Xóa
+                    </Button>
+                </div> :
+                <Button
+                    type="primary"
+                    danger
+                    onClick={() => alert(`Ngừng kích hoạt sản phẩm: ${record.productName}`)}
+                >
+                    Ngừng kích hoạt
+                </Button>
+
+            ),
+            align: 'center',
+        }, {
             title: 'Xem chi tiết',
             key: 'action',
-            render: (record: LoanProduct) => (
+            render: (record: LoanProductRp) => (
                 <Button type="link" onClick={() => handleViewDetail(record)}>Chi tiết</Button>
             ),
         },
     ];
 
 
-    return <Table columns={columns} dataSource={data} rowKey="productId" loading={loading} pagination={{ pageSize: 10 }} />;
+    return <Table columns={columns} dataSource={data} rowKey="productId" loading={loading} pagination={{ pageSize: 10 }
+    } />;
 };
 
 export default LoanProductTable;
