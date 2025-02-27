@@ -15,8 +15,11 @@
     "@ant-design/pro-cli": "^3.2.1",
     "@ant-design/pro-components": "^2.4.4",
     "@umijs/max": "^4.4.5",
+    "@umijs/plugin-dva": "^0.13.2",
     "@umijs/plugin-request": "^2.9.0",
-    "antd": "^5.4.0"
+    "antd": "^5.4.0",
+    "localforage": "^1.10.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",

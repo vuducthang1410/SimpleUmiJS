@@ -5,9 +5,9 @@ import { useModel } from '@umijs/max';
 const HomePage: React.FC = () => {
   const { name } = useModel('global');
   return (
-    <PageContainer ghost>
+    <PageContainer ghost style={{ width: "1000px", height: "100px" }}>
       <div>
-        <div>ehe</div>
+        <div style={{ color: 'red' }}>ehggggggggggggggggggggggggggggggge</div>
       </div>
     </PageContainer>
   );
