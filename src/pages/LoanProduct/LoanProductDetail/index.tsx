@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Table, Button, Card, Modal, Form, Input, Select, Switch, message } from 'antd';
-import { LoanProduct, LoanProductRp } from '@/types/LoanProductModel';
-import { useModel, useParams } from '@umijs/max';
+import { LoanProductRp } from '@/types/LoanProductModel';
+import { useDispatch, useParams } from '@umijs/max';
 import { InterestRate, InterestRateRq } from '@/types/InterestRate';
 import { App } from 'antd';
 const { Option } = Select;
@@ -11,8 +11,7 @@ interface Props {
 }
 
 const LoanProductDetail: React.FC<Props> = ({ idLoanProduct }) => {
-    const { getLoanProductById } = useModel('loanProduct');
-    const { createNewInterestRate } = useModel('interestRate');
+    const dispatch = useDispatch()
     const { id } = useParams<{ id: string }>();
     const [loanProductRp, setLoanProductRp] = useState<LoanProductRp | null>(null);
     const [editingRate, setEditingRate] = useState<InterestRateRq>({ loanProductId: '', interestRate: 0, unit: 'MONTH', minimumAmount: 0, minimumLoanTerm: 0 });
@@ -23,7 +22,7 @@ const LoanProductDetail: React.FC<Props> = ({ idLoanProduct }) => {
     };
 
     const handleToggleProductStatus = () => {
-        // dispatch({ type: 'loan/toggleProductStatus', payload: { id } });
+        dispatch({ type: 'loanProduct/activedLoanProduct', payload: { id: loanProductRp?.productId, isUnActive: false, callback: () => handleBack() } });
     };
     const handleEdit = (rate: InterestRate) => {
         setIsModalUpdateOpen(true);
@@ -33,20 +32,23 @@ const LoanProductDetail: React.FC<Props> = ({ idLoanProduct }) => {
             message.error('Không tìm thấy sản phẩm vay');
             return;
         }
-
         setEditingRate(prev => {
             const updatedRate = { ...prev, loanProductId: id };
-
             // Gọi API sau khi state đã cập nhật
-            createNewInterestRate(updatedRate).then(() => {
-                loadData(updatedRate.loanProductId);
-            });
-
+            dispatch({
+                type: 'interestRate/createNewInterestRate',
+                payload: { data: updatedRate, callback: pushNoti, updateCallback: () => loadData(updatedRate.loanProductId) }
+            })
             return updatedRate;
         });
-
         setIsModalCreateOpen(false);
     };
+    const pushNoti = useCallback((messageNoti: string) => {
+        setTimeout(() => {
+            message.info(messageNoti);
+        }, 0);
+    }, []);
+
 
     const handleDelete = (rateId: string) => {
         Modal.confirm({
@@ -57,14 +59,12 @@ const LoanProductDetail: React.FC<Props> = ({ idLoanProduct }) => {
             },
         });
     };
-    const loadData = async (id: string) => {
+    const loadData = (id: string) => {
         if (id)
-            await getLoanProductById(id).then((rp) => {
-                if (rp)
-                    setLoanProductRp(rp.data);
-                else
-                    message.error('Không tìm thấy sản phẩm vay');
-            });
+            dispatch({
+                type: 'loanProduct/getLoanProductById',
+                payload: { id: id, callback: setLoanProductRp },
+            })
     }
     useEffect(() => {
         if (id) {
@@ -100,15 +100,19 @@ const LoanProductDetail: React.FC<Props> = ({ idLoanProduct }) => {
             dataIndex: 'minimumAmount',
             key: 'minimumAmount',
         },
-        {
-            title: 'Ngày hiệu lực',
-            dataIndex: 'dateActive',
-            key: 'dateActive',
-        },
+        // {
+        //     title: 'Ngày hiệu lực',
+        //     dataIndex: 'dateActive',
+        //     key: 'dateActive',
+        // },
         {
             title: 'Kỳ hạn tối thiểu',
             dataIndex: 'minimumLoanTerm',
             key: 'minimumLoanTerm',
+        }, {
+            title: 'Ngày tạo',
+            dataIndex: 'createdDate',
+            key: 'createdDate',
         },
         {
             title: 'Kích hoạt',
@@ -117,7 +121,7 @@ const LoanProductDetail: React.FC<Props> = ({ idLoanProduct }) => {
             render: (isActive: string, record: InterestRate) => (
                 <Switch
                     checked={isActive === 'true'}
-                // onChange={() => dispatch({ type: 'loan/toggleInterestRate', payload: { id: record.id } })}
+                    onChange={() => dispatch({ type: 'loan/toggleInterestRate', payload: { id: record.id } })}
                 />
             ),
         },

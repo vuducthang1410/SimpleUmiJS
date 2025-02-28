@@ -1,4 +1,4 @@
-import { InterestRate } from '@/services/interestRate/interestRate';
+import { InterestRate } from './InterestRate';
 
 export interface LoanProduct {
   nameLoanProduct: string;

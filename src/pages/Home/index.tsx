@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
   return (
     <PageContainer ghost style={{ width: "1000px", height: "100px" }}>
       <div>
-        <div style={{ color: 'red' }}>Hello ${initialState?.currentUser?.userName} ${initialState?.currentUser?.role}</div>
+        <div style={{ color: 'red' }}>Hello {initialState?.currentUser?.userName} </div>
       </div>
     </PageContainer>
   );

@@ -1,26 +1,32 @@
 import { Modal, Row, Col, Form, Input, InputNumber, Select, Button } from 'antd';
 import { LoanProduct, LoanForm, ApplicableObjects } from '@/types/LoanProductModel';
 import useLoanProductForm from '@/utils/HandleLoanProductForm';
+import { useDispatch } from '@umijs/max';
 
 const { Option } = Select;
 interface DataProps {
     visible: boolean;
     onClose: () => void;
-    createLoanProduct: (product: LoanProduct) => Promise<void>
-    fetchLoanProducts: (payload: { active: boolean; pageNumber: number; pageSize: number }) => void;
 }
 
 const LoanProductCreateModal:
-    React.FC<DataProps> = ({ visible, onClose, createLoanProduct, fetchLoanProducts }) => {
+    React.FC<DataProps> = ({ visible, onClose }) => {
+        const dispatch = useDispatch();
         const { newLoanProduct, handleInputChange } = useLoanProductForm();
         const [form] = Form.useForm();
 
-        const handleSubmit = async (values: LoanProduct) => {
+        const handleSubmit = (values: LoanProduct) => {
             console.log('Dữ liệu sản phẩm vay:', values);
-            await createLoanProduct(values); // Gửi dữ liệu đi
+            dispatch({
+                type: 'loanProduct/createNewLoanProduct',
+                payload: values
+            })
             form.resetFields(); // Reset form sau khi submit
             onClose(); // Đóng modal
-            fetchLoanProducts({ active: false, pageNumber: 0, pageSize: 10 }); // Load lại dữ liệu
+            dispatch({
+                type: 'loanProduct/fetchLoanProducts',
+                payload: { active: false, pageNumber: 0, pageSize: 10 },
+            });
         };
 
         return (

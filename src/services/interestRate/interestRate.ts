@@ -1,18 +1,32 @@
 import { InterestRate, InterestRateRq } from '@/types/InterestRate';
 import generateTransactionId from '@/utils/Transaction';
 import getURL from '@/utils/URL';
-import { request } from '@umijs/max';
+import { AxiosError, request } from '@umijs/max';
 
 export async function createInterestRate(interestRate: InterestRateRq) {
-  return request<APIResponseInterestRate>(getURL() + '/interest-rate/save', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      transactionId: generateTransactionId(),
-    },
-    data: interestRate,
-  });
+  try {
+    return await request<APIResponseInterestRate>(
+      getURL() + '/interest-rate/save',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          transactionId: generateTransactionId(),
+        },
+        data: interestRate,
+      },
+    );
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    const errorMessage =
+      axiosError.response?.data?.data ||
+      axiosError.message ||
+      'Có lỗi xảy ra khi tạo lãi suất';
+
+    throw new Error(errorMessage);
+  }
 }
+
 export async function getInterestRateByLoanProductId(
   loanProductId: string,
   pageNumber = 0,

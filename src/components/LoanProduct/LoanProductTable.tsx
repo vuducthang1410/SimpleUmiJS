@@ -1,25 +1,38 @@
 import React, { useEffect } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, Modal, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { LoanProductRp } from '@/types/LoanProductModel';
 import { NotificationType } from '@/types/NotificationType';
 import { APIResponseLoanProduct } from '@/services/LoanProduct/loanProduct';
-import { history } from '@umijs/max';
+import { history, useDispatch } from '@umijs/max';
 
 interface LoanProductTableProps {
     data: LoanProductRp[];
     loading: boolean;
-    deleteLoanProductById: (id: string) => Promise<void>
     openNotificationWithIcon: (type: NotificationType, title: string, description: string) => void;
 }
 
-const LoanProductTable: React.FC<LoanProductTableProps> = ({ data, loading, deleteLoanProductById, openNotificationWithIcon }) => {
+const LoanProductTable: React.FC<LoanProductTableProps> = ({ data, loading, openNotificationWithIcon }) => {
+    const dispatch = useDispatch();
+    const handleToggleProductStatus = (id: string) => {
+        dispatch({ type: 'loanProduct/activedLoanProduct', payload: { id: id, isUnActive: true } });
+    };
     const handleViewDetail = async (record: LoanProductRp) => {
         history.push(`/loan-product/detail/${record.productId}`, record.productId);
     };
     const handleDelete = (record: LoanProductRp) => {
-        deleteLoanProductById(record.productId);
-        openNotificationWithIcon(NotificationType.success, "Xóa sản phẩm thành công", `Đã xóa sản phẩm ${record.productName}`);
+        Modal.confirm({
+            title: 'Xác nhận xóa',
+            content: 'Bạn có chắc chắn muốn xóa lãi suất này không?',
+            onOk: () => {
+                dispatch({
+                    type: 'loanProduct/deleteLoanProductById',
+                    payload: { id: record.productId }
+                })
+                openNotificationWithIcon(NotificationType.success, "Xóa sản phẩm thành công", `Đã xóa sản phẩm ${record.productName}`);
+            },
+        });
+
     };
     const columns: ColumnsType<LoanProductRp> = [
         { title: 'STT', dataIndex: 'index', key: 'index', render: (_, __, index) => index + 1 },
@@ -52,7 +65,7 @@ const LoanProductTable: React.FC<LoanProductTableProps> = ({ data, loading, dele
                 <Button
                     type="primary"
                     danger
-                    onClick={() => alert(`Ngừng kích hoạt sản phẩm: ${record.productName}`)}
+                    onClick={() => handleToggleProductStatus(record.productId)}
                 >
                     Ngừng kích hoạt
                 </Button>

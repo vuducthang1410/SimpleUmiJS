@@ -1,42 +1,88 @@
 import {
+  APIResponseInterestRate,
   createInterestRate,
   getInterestRateByLoanProductId,
 } from '@/services/interestRate/interestRate';
-import { InterestRate, InterestRateRq } from '@/types/InterestRate';
-import { useState } from 'react';
+import { InterestRate } from '@/types/InterestRate';
+import { Effect, Reducer } from '@umijs/max';
 
-export default function useLoanInterstRate() {
-  const [interestRateList, setInterestRateList] = useState<InterestRate[]>([]);
-  const [totalRecords, setTotalRecords] = useState<number>(0);
+export interface InterestRateState {
+  interestRateList: InterestRate[];
+  totalRecords: number;
+}
 
-  const fetchInterestRateWrapper = async (payload: {
-    loanProductId: string;
-    pageNumber: number;
-    pageSize: number;
-  }) => {
-    try {
-      const response = await getInterestRateByLoanProductId(
-        payload.loanProductId,
-        payload.pageNumber,
-        payload.pageSize,
-      );
-      console.log(response);
-      setInterestRateList(response.data.interestRateList);
-      setTotalRecords(response.data.totalRecord);
-    } catch (error) {
-      console.error('Lỗi khi fetch dữ liệu lãi suất:', error);
-    }
+export interface InterestRateModel {
+  namespace: 'interestRate';
+  state: InterestRateState;
+  reducers: {
+    setInterestRates: Reducer<InterestRateState>;
   };
-  const createNewInterestRate = async (interestRate: InterestRateRq) => {
-    try {
-      await createInterestRate(interestRate);
-      console.log('Tạo lãi suất thành công!');
-    } catch (error) {
-      console.error('Lỗi khi tạo lãi suất:', error);
-    }
-  };
-  return {
-    createNewInterestRate,
-    fetchInterestRateWrapper,
+  effects: {
+    fetchInterestRates: Effect;
+    createNewInterestRate: Effect;
   };
 }
+
+const useInterestRate: InterestRateModel = {
+  namespace: 'interestRate',
+
+  state: {
+    interestRateList: [],
+    totalRecords: 0,
+  },
+
+  reducers: {
+    setInterestRates(state, action) {
+      return {
+        ...state,
+        interestRateList: action.payload?.interestRateList || [],
+        totalRecords: action.payload?.totalRecord || 0,
+      };
+    },
+  },
+
+  effects: {
+    *fetchInterestRates({ payload }, { call, put }): Generator<any, void, any> {
+      try {
+        const response = yield call(
+          getInterestRateByLoanProductId,
+          payload.loanProductId,
+          payload.pageNumber,
+          payload.pageSize,
+        );
+        if (response?.data) {
+          yield put({
+            type: 'setInterestRates',
+            payload: response.data,
+          });
+        } else {
+          console.warn('Không có dữ liệu lãi suất.');
+        }
+      } catch (error) {
+        console.error('Lỗi khi fetch dữ liệu lãi suất:', error);
+      }
+    },
+
+    *createNewInterestRate({ payload }, { call, put }) {
+      console.log('first');
+      try {
+        const response: APIResponseInterestRate = yield call(
+          createInterestRate,
+          payload.data,
+        );
+        if (payload.updateCallback) {
+          payload.updateCallback();
+        }
+        console.log('Thêm mới lãi xuất thành công');
+      } catch (error) {
+        if (error instanceof Error) {
+          payload.callback('Error: ' + error.message);
+        } else {
+          payload.callback('Lỗi không xác định. Vui lòng thử lại!');
+        }
+      }
+    },
+  },
+};
+
+export default useInterestRate;

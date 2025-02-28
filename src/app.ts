@@ -1,8 +1,10 @@
 import { User } from './types/User';
 
-export async function getInitialState(): Promise<{ currentUser?: User }> {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  return { currentUser: user };
+export async function getInitialState(): Promise<{
+  currentUser?: User | null;
+}> {
+  const user = localStorage.getItem('user');
+  return { currentUser: user ? JSON.parse(user) : null };
 }
 
 export const layout = () => {

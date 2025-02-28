@@ -4,8 +4,9 @@ const AuthGuard: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const user = localStorage.getItem('user');
+    console.log(user)
+    if (!user) {
       history.replace('/login');
     } else {
       setIsAuthenticated(true);

@@ -7,15 +7,15 @@ import { PageContainer } from '@ant-design/pro-components';
 
 const FinancialInfo: React.FC = () => {
     const { financial, fetchList } = useModel('financial');
-      const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
-        // setLoading(true)
+        setLoading(true)
         const fetchData = async () => {
             await fetchList();
             console.log('data cập nhật:', financial.list);
         };
         fetchData();
-        // setLoading(false)
+        setLoading(false)
     }, [fetchList]);
 
 

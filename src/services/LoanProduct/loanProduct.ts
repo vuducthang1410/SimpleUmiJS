@@ -41,6 +41,15 @@ export async function getDetailLoanProduct(id: string) {
     headers: { transactionId: generateTransactionId() },
   });
 }
+export async function activedLoanProductApi(id: string) {
+  return request(getURL() + `/loan-product/active/${id}`, {
+    method: 'PATCH',
+    headers: {
+      accept: '*/*',
+      transactionId: generateTransactionId(),
+    },
+  });
+}
 // Định nghĩa kiểu dữ liệu trả về từ API
 
 export interface APIResponseLoanProduct {

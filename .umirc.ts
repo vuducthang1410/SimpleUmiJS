@@ -4,6 +4,7 @@ export default defineConfig({
   antd: {},
   access: {},
   model: {},
+  dva: {},
   initialState: {},
   request: {},
   layout: {
@@ -13,6 +14,7 @@ export default defineConfig({
     {
       path: '/',
       redirect: '/home',
+      wrappers: ['@/pages/Login/AuthGuard'],
     },
     {
       name: 'Trang chủ',
@@ -39,7 +41,7 @@ export default defineConfig({
       path: '/loan-product',
       component: './LoanProduct',
       wrappers: ['@/pages/Login/AuthGuard'],
-      access: 'isAdmin',
+      access: 'isManager',
     },
     {
       path: '/loan-product/detail/:id',
