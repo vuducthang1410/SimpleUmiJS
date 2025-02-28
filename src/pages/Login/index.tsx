@@ -1,12 +1,20 @@
+import { User } from "@/types/User";
 import { history } from "@umijs/max";
 import { Button, Form, Input } from "antd";
-import React from "react";
+import React, { useState } from "react";
 
 const Login: React.FC = () => {
+    const [user, setUser] = useState<User>();
     const onFinish = (values: { username: string; password: string }) => {
+
         if (values.username === "admin" && values.password === "123456") {
-            localStorage.setItem("token", "fake-jwt-token");
-            history.push("/home"); // ✅ Chuyển hướng sau khi đăng nhập thành công
+            setUser({ userName: values.username, token: "fake-jwt-token", role: "admin" });
+            localStorage.setItem("user", JSON.stringify(user));
+            history.push("/home");
+        } else if (values.username === "manager" && values.password === "123456") {
+            setUser({ userName: values.username, token: "fake-jwt-token", role: "manager" });
+            localStorage.setItem("user", JSON.stringify(user));
+            history.push("/home");
         } else {
             alert("Sai tài khoản hoặc mật khẩu!");
         }

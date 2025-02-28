@@ -25,22 +25,32 @@ export default defineConfig({
       path: '/customer-loan',
       component: './LoanInfo',
       wrappers: ['@/pages/Login/AuthGuard'],
+      access: 'isAdmin',
     },
     {
       name: 'Thông tin tài chính',
       path: '/financial-info',
       component: './FinancialInfo',
       wrappers: ['@/pages/Login/AuthGuard'],
+      access: 'isAdminOrManager',
     },
     {
       name: 'Sản phẩm vay',
       path: '/loan-product',
       component: './LoanProduct',
       wrappers: ['@/pages/Login/AuthGuard'],
+      access: 'isAdmin',
     },
     {
       path: '/loan-product/detail/:id',
       component: './LoanProduct/LoanProductDetail',
+      wrappers: ['@/pages/Login/AuthGuard'],
+      access: 'isManager',
+    },
+    {
+      name: 'Đăng xuất',
+      path: '/logout',
+      component: './Logout',
       wrappers: ['@/pages/Login/AuthGuard'],
     },
     {
