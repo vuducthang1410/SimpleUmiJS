@@ -11,6 +11,8 @@ const Login: React.FC = () => {
             setUser({ userName: values.username, token: "fake-jwt-token", role: "admin" });
         } else if (values.username === "manager" && values.password === "123456") {
             setUser({ userName: values.username, token: "fake-jwt-token", role: "manager" });
+        } else if (values.username === "user" && values.password === "123456") {
+            setUser({ userName: values.username, token: "fake-jwt-token", role: "user" });
         } else {
             alert("Sai tài khoản hoặc mật khẩu!");
         }

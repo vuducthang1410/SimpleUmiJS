@@ -50,6 +50,13 @@ export default defineConfig({
       access: 'isManager',
     },
     {
+      name: 'Đăng ký thông tin tài chính',
+      path: '/financial-info/register',
+      component: '@/pages/FinancialInfo/User/Register',
+      wrappers: ['@/pages/Login/AuthGuard'],
+      access: 'isUser',
+    },
+    {
       name: 'Đăng xuất',
       path: '/logout',
       component: './Logout',
