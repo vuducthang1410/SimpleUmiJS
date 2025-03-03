@@ -38,7 +38,7 @@ export async function getInterestRateByLoanProductId(
       method: 'GET',
       headers: {
         accept: '*/*',
-        transactionId: '02787b44-f26e-40e8-a4d8-c',
+        transactionId: generateTransactionId(),
       },
       params: { pageNumber, pageSize },
     },

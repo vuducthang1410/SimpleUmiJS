@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Table, Button, Modal, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { LoanProductRp } from '@/types/LoanProductModel';
+import { LoanProductRp } from '@/types/LoanProduct';
 import { NotificationType } from '@/types/NotificationType';
 import { history, useDispatch } from '@umijs/max';
 
@@ -17,7 +17,7 @@ const LoanProductTable: React.FC<LoanProductTableProps> = ({ data, loading, open
         dispatch({ type: 'loanProduct/activedLoanProduct', payload: { id: id, isUnActive: true } });
     };
     const handleViewDetail = async (record: LoanProductRp) => {
-        history.push(`/loan-product/detail/${record.productId}`, record.productId);
+        history.push(`/admin/loan-product/detail/${record.productId}`, record.productId);
     };
     const handleDelete = (record: LoanProductRp) => {
         Modal.confirm({

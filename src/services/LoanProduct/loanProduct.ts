@@ -1,7 +1,12 @@
-import { LoanProduct, LoanProductRp } from '@/types/LoanProductModel';
+import {
+  APIResponseListLoanProduct,
+  APIResponseListLoanProductForUser,
+  APIResponseLoanProduct,
+  LoanProduct,
+} from '@/types/LoanProduct';
 import generateTransactionId from '@/utils/Transaction';
 import getURL from '@/utils/URL';
-import { request } from '@umijs/max';
+import { AxiosError, request } from '@umijs/max';
 export async function fetchLoanProducts(
   active: boolean,
   pageNumber = 0,
@@ -50,18 +55,47 @@ export async function activedLoanProductApi(id: string) {
     },
   });
 }
-// Định nghĩa kiểu dữ liệu trả về từ API
+export async function getListLoanProductForUser(pageSize = 12, pageNum = 0) {
+  try {
+    return await request<APIResponseListLoanProductForUser>(
+      getURL() + '/loan-product/get-all-loan-product-active',
+      {
+        method: 'GET',
+        headers: {
+          accept: '*/*',
+          transactionId: generateTransactionId(),
+        },
+        params: { pageNum, pageSize },
+      },
+    );
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    const errorMessage =
+      axiosError.response?.data?.data ||
+      axiosError.message ||
+      'Có lỗi xảy ra khi tạo lãi suất';
 
-export interface APIResponseLoanProduct {
-  data: LoanProductRp;
-  message: string;
-  status: string;
+    throw new Error(errorMessage);
+  }
 }
-export interface APIResponseListLoanProduct {
-  data: {
-    totalRecords: number;
-    loanProductRpList: LoanProductRp[];
-  };
-  message: string;
-  status: string;
+
+export default function getLoanProductForUser(id: string) {
+  try {
+    return request<APIResponseLoanProduct>(
+      getURL() + `/loan-product/loan-product-detail/${id}`,
+      {
+        method: 'GET',
+        headers: { transactionId: generateTransactionId() },
+      },
+    );
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    const errorMessage =
+      axiosError.response?.data?.data ||
+      axiosError.message ||
+      'Có lỗi xảy ra khi tạo lãi suất';
+
+    throw new Error(errorMessage);
+  }
 }
+// Định nghĩa kiểu dữ liệu trả về từ API

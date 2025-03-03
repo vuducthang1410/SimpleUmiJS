@@ -11,11 +11,25 @@ export namespace API {
     amountLoanLimit: number;
   }
 
-  export interface FinancialInfoResponse {
+  export interface FinancialInfoListResponse {
     data: {
       totalRecords: number;
       financialInfoRpList: FinancialInfoItem[];
     };
+    message: string;
+    status: string;
+  }
+  export interface FinancialInfoRp {
+    customerId: string;
+    customerName: string;
+    dateOfBirth: string;
+    identificationNumber: string;
+    numberPhone: string;
+    amountLoanLimit: number;
+  }
+
+  export interface FinancialInfoResponse {
+    financialInfoRq: FinancialInfoRp;
     message: string;
     status: string;
   }

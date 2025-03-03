@@ -25,9 +25,40 @@ export interface LoanProductRp {
   productDescription: string;
   formLoan: string;
   loanLimit: string;
+  imgUrl: string;
   termLimit: number;
   createdDate: string;
   isActive: boolean;
   applicableObjects: string;
   interestRate: InterestRate[];
+}
+export interface LoanProductForUserRp {
+  loanProductId: string;
+  nameLoanProduct: string;
+  urlImage: string;
+  minInterestRate: number;
+  maxInterestRate: number;
+  maxLoanAmount: string;
+  maxLoanTerm: number;
+}
+export interface APIResponseLoanProduct {
+  data: LoanProductRp;
+  message: string;
+  status: string;
+}
+export interface APIResponseListLoanProduct {
+  data: {
+    totalRecords: number;
+    loanProductRpList: LoanProductRp[];
+  };
+  message: string;
+  status: string;
+}
+export interface APIResponseListLoanProductForUser {
+  data: {
+    totalRecords: number;
+    loanProductForUserRpList: LoanProductForUserRp[];
+  };
+  message: string;
+  status: string;
 }

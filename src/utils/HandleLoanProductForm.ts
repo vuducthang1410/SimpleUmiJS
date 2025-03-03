@@ -1,9 +1,5 @@
 // src/hooks/useLoanProductForm.ts
-import {
-  ApplicableObjects,
-  LoanForm,
-  LoanProduct,
-} from '@/types/LoanProductModel';
+import { ApplicableObjects, LoanForm, LoanProduct } from '@/types/LoanProduct';
 import { useState } from 'react';
 
 export default function useLoanProductForm() {

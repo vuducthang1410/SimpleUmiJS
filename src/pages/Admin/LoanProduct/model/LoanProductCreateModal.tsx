@@ -1,5 +1,5 @@
 import { Modal, Row, Col, Form, Input, InputNumber, Select, Button } from 'antd';
-import { LoanProduct, LoanForm, ApplicableObjects } from '@/types/LoanProductModel';
+import { LoanProduct, LoanForm, ApplicableObjects } from '@/types/LoanProduct';
 import useLoanProductForm from '@/utils/HandleLoanProductForm';
 import { useDispatch } from '@umijs/max';
 

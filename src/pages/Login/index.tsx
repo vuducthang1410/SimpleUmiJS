@@ -8,11 +8,11 @@ const Login: React.FC = () => {
     const { setInitialState } = useModel("@@initialState");
     const onFinish = (values: { username: string; password: string }) => {
         if (values.username === "admin" && values.password === "123456") {
-            setUser({ userName: values.username, token: "fake-jwt-token", role: "admin" });
+            setUser({ userName: values.username, token: "fake-jwt-token", role: "admin", cifCode: '' });
         } else if (values.username === "manager" && values.password === "123456") {
-            setUser({ userName: values.username, token: "fake-jwt-token", role: "manager" });
+            setUser({ userName: values.username, token: "fake-jwt-token", role: "manager", cifCode: '' });
         } else if (values.username === "user" && values.password === "123456") {
-            setUser({ userName: values.username, token: "fake-jwt-token", role: "user" });
+            setUser({ userName: values.username, token: "fake-jwt-token", role: "user", cifCode: '123456789' });
         } else {
             alert("Sai tài khoản hoặc mật khẩu!");
         }

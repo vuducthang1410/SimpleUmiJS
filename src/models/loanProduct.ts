@@ -5,7 +5,7 @@ import {
   fetchLoanProducts,
   getDetailLoanProduct,
 } from '@/services/LoanProduct/loanProduct';
-import { LoanProductRp } from '@/types/LoanProductModel';
+import { LoanProductRp } from '@/types/LoanProduct';
 import { Effect, Reducer } from '@umijs/max';
 
 export interface LoanProductState {

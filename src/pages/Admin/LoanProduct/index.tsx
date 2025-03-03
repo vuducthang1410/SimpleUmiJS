@@ -3,7 +3,7 @@ import { Select, Card, Button, Modal, notification } from 'antd';
 import LoanProductTable from '@/components/LoanProduct/LoanProductTable';
 import { PageContainer } from '@ant-design/pro-components';
 import LoanProductCreateModal from './model/LoanProductCreateModal';
-import { useDispatch, useModel, useSelector } from '@umijs/max';
+import { useDispatch, useSelector } from '@umijs/max';
 import { NotificationType } from '@/types/NotificationType';
 const { Option } = Select;
 
