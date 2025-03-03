@@ -3,7 +3,6 @@ import { Table, Button, Modal, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { LoanProductRp } from '@/types/LoanProductModel';
 import { NotificationType } from '@/types/NotificationType';
-import { APIResponseLoanProduct } from '@/services/LoanProduct/loanProduct';
 import { history, useDispatch } from '@umijs/max';
 
 interface LoanProductTableProps {

@@ -8,7 +8,7 @@ const FileUpload: React.FC<{ form: any }> = ({ form }) => {
     return (
         <Form.Item name="files" label="Tài liệu xác minh" valuePropName="fileList" getValueFromEvent={normFile}>
             <Upload multiple beforeUpload={() => false}>
-                {/* <Button icon={<UploadOutlined />}>Chọn file</Button> */}
+                <Button icon={<UploadOutlined />}>Chọn file</Button>
             </Upload>
         </Form.Item>
     );
