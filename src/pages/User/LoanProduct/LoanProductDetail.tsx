@@ -1,6 +1,6 @@
 import { LoanProductRp } from '@/types/LoanProduct';
 import { history, useDispatch, useParams } from '@umijs/max';
-import { Button, Card, Descriptions, Table, Typography } from 'antd';
+import { App, Button, Card, Descriptions, Table, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import LoanRegistrationForm from '../Loan/RegisterFormModal';
 
@@ -27,7 +27,7 @@ export default function LoanProductDetail() {
   }
 
   return (
-    <div style={{ maxWidth: 800, margin: 'auto', padding: '20px' }}>
+    <App style={{ maxWidth: 800, margin: 'auto', padding: '20px' }}>
       <Card>
         <Button style={{ marginBottom: 15 }} onClick={() => history.back()}>
           {'< Quay lại'}
@@ -114,10 +114,12 @@ export default function LoanProductDetail() {
               loanProductId=""
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
+              loanTermLimit={loanProductResponse.termLimit}
+              amountLoanLimit={loanProductResponse.loanLimit}
             />
           )}
         </div>
       </Card>
-    </div>
+    </App>
   );
 }

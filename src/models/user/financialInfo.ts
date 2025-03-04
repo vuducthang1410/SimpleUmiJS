@@ -15,7 +15,7 @@ export interface FinancialInfoModel {
   namespace: 'financialInfo';
   state: RootState;
   reducers: {};
-  effects: { getFinancialInfoByCustomerId: Effect };
+  effects: { getFinancialInfoByCifCode: Effect };
 }
 
 const useFinancialInfo: FinancialInfoModel = {
@@ -28,7 +28,7 @@ const useFinancialInfo: FinancialInfoModel = {
   },
   reducers: {},
   effects: {
-    *getFinancialInfoByCustomerId(
+    *getFinancialInfoByCifCode(
       { payload },
       { call },
     ): Generator<any, void, any> {
@@ -38,6 +38,7 @@ const useFinancialInfo: FinancialInfoModel = {
           payload.cifCode,
         );
         console.log('heheh', response);
+        payload.callback(response.data);
       } catch (error) {}
     },
   },

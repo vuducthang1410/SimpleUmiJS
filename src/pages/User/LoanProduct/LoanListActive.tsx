@@ -1,6 +1,6 @@
 import { LoanProductForUserRp } from '@/types/LoanProduct';
 import { history, useDispatch, useSelector } from '@umijs/max';
-import { Button, Card, List, Spin, Tag, Typography } from 'antd';
+import { App, Button, Card, List, Spin, Tag, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import LoanRegistrationForm from '../Loan/RegisterFormModal';
 const LoanListActive: React.FC = () => {
@@ -8,7 +8,7 @@ const LoanListActive: React.FC = () => {
   const { loanProductList, loading } = useSelector(
     (state: any) => state.loanProductForUser,
   );
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openModalId, setOpenModalId] = useState<string | null>(null);
   const navigateToDetail = (id: string) => {
     history.push(`${'/loan-product/' + id}`);
   };
@@ -24,7 +24,7 @@ const LoanListActive: React.FC = () => {
     console.log('data', loanProductList);
   }, [loanProductList]);
   return (
-    <>
+    <App>
       <Spin spinning={loading}>
         <List
           grid={{ gutter: 16, column: 3 }}
@@ -63,16 +63,22 @@ const LoanListActive: React.FC = () => {
                   <Button onClick={() => navigateToDetail(item.loanProductId)}>
                     Xem chi tiết
                   </Button>
-                  <Button type="primary" onClick={() => setIsModalOpen(true)}>
+                  <Button
+                    type="primary"
+                    onClick={() => setOpenModalId(item.loanProductId)}
+                  >
                     Đăng ký vay
                   </Button>
-                </div>      <div style={{ position: 'absolute' }}>
-                  {isModalOpen == true && (
+                </div>{' '}
+                <div style={{ position: 'absolute' }}>
+                  {openModalId === item.loanProductId && (
                     <LoanRegistrationForm
                       loanProductName={item.nameLoanProduct}
                       loanProductId={item.loanProductId}
-                      isModalOpen={isModalOpen}
-                      setIsModalOpen={setIsModalOpen}
+                      isModalOpen={openModalId === item.loanProductId}
+                      loanTermLimit={item.maxLoanTerm}
+                      amountLoanLimit={item.maxLoanAmount}
+                      setIsModalOpen={() => setOpenModalId(null)} // Đóng modal khi xong
                     />
                   )}
                 </div>
@@ -81,8 +87,7 @@ const LoanListActive: React.FC = () => {
           )}
         />
       </Spin>
-
-    </>
+    </App>
   );
 };
 

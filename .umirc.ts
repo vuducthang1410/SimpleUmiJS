@@ -56,16 +56,28 @@ export default defineConfig({
       wrappers: ['@/pages/Login/AuthGuard'],
       access: 'isUser',
     },
-    // {
-    //   path: '/loan-product/register-loan',
-    //   component: '@/pages/User/Loan/Register',
-    //   wrappers: ['@/pages/Login/AuthGuard'],
-    //   access: 'isUser',
-    // },
     {
       name: 'Danh sách sản phẩm vay',
       path: '/loan-product',
       component: '@/pages/User/LoanProduct/LoanListActive',
+      wrappers: ['@/pages/Login/AuthGuard'],
+      access: 'isUser',
+    },
+    {
+      name: 'Thông tin vay vốn',
+      path: '/loan-product',
+      routes: [
+        {
+          name: 'Lịch sử vay vốn',
+          path: 'loan-product1',
+          component: '@/pages/User/LoanProduct/LoanListActive',
+        },
+        {
+          name: 'Thông tin vay vốn',
+          path: 'loan-product2',
+          component: '@/pages/User/LoanProduct/LoanListActive',
+        },
+      ],
       wrappers: ['@/pages/Login/AuthGuard'],
       access: 'isUser',
     },
@@ -75,12 +87,7 @@ export default defineConfig({
       wrappers: ['@/pages/Login/AuthGuard'],
       access: 'isUser',
     },
-    // {
-    //   path: '/loan-product/:id/register-loan',
-    //   component: '@/pages/User/Loan/Register',
-    //   wrappers: ['@/pages/Login/AuthGuard'],
-    //   access: 'isUser',
-    // },
+
     {
       name: 'Đăng xuất',
       path: '/logout',

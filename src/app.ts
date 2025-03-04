@@ -1,5 +1,4 @@
 import { User } from './types/User';
-
 export async function getInitialState(): Promise<{
   currentUser?: User | null;
 }> {
@@ -15,3 +14,4 @@ export const layout = () => {
     },
   };
 };
+
