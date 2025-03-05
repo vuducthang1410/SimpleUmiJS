@@ -1,0 +1,43 @@
+.loan-card {
+  width: 85%;
+  border-radius: 10px;
+  margin-left: 25px;
+}
+
+.loan-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.loan-icon {
+  font-size: 24px;
+  color: #1890ff;
+}
+
+.loan-body {
+  padding: 10px 0;
+}
+
+.loan-section {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.money {
+  color: #d46b08;
+  font-weight: bold;
+}
+
+.loan-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}

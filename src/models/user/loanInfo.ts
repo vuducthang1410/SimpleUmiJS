@@ -1,4 +1,8 @@
-import { registerLoanInfo } from '@/services/loan/info';
+import {
+  getLoanInfoActiveByCifCode,
+  getLoanInfoHistoryByCifCode,
+  registerLoanInfo,
+} from '@/services/loan/info';
 import { Effect, Reducer } from '@umijs/max';
 
 export interface LoanDetailInfo {
@@ -12,7 +16,11 @@ export interface LoanDetailInfoModel {
   namespace: 'loanDetailInfo';
   state: RootState;
   reducers: { setLoading: Reducer };
-  effects: { registerLoanInfo: Effect };
+  effects: {
+    registerLoanInfo: Effect;
+    getLoanInfoHistoryByCifCode: Effect;
+    getLoanInfoActiveByCifCode: Effect;
+  };
 }
 const useLoanDetailInfo: LoanDetailInfoModel = {
   namespace: 'loanDetailInfo',
@@ -51,6 +59,54 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
       } finally {
         yield put({ type: 'setLoading', payload: false });
         payload.callbackSetStatusModal(false);
+      }
+    },
+    *getLoanInfoHistoryByCifCode(
+      { payload, callback },
+      { call },
+    ): Generator<any, void, any> {
+      try {
+        const response = yield call(
+          getLoanInfoHistoryByCifCode,
+          payload.loanInfoHistoryRq,
+        );
+        if (response && response.data) {
+          callback(
+            response.data.loanDetailInfoRpList,
+            response.data.totalRecord,
+          );
+        } else {
+          callback([]);
+        }
+        console.log('hhe', response);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *getLoanInfoActiveByCifCode(
+      { payload, callback },
+      { call },
+    ): Generator<any, void, any> {
+      try {
+        console.log(payload);
+        const response = yield call(
+          getLoanInfoActiveByCifCode,
+          payload.pageSize,
+          payload.pageNumber,
+          payload.cifCode,
+        );
+        if (response && response.data) {
+          callback(
+            response.data.loanDetailInfoRpList,
+            response.data.totalRecord,
+          );
+        } else {
+          callback([]);
+        }
+        console.log(response);
+        console.log('hhe', response);
+      } catch (error) {
+        console.log(error);
       }
     },
   },

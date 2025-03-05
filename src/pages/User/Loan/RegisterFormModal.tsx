@@ -1,5 +1,6 @@
 import { API } from '@/types/financialInfo';
 import { LoanRegisterInfo } from '@/types/LoanInfo';
+import { getUserInfoInLocalStorage } from '@/utils/UserInfo';
 import { useDispatch, useSelector } from '@umijs/max';
 import {
   App,
@@ -64,8 +65,7 @@ const LoanRegistrationForm: React.FC<DataProps> = ({
     })
   };
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    const userData = storedUser ? JSON.parse(storedUser) : null;
+    const userData = getUserInfoInLocalStorage();
     if (userData && loanProductId)
       setLoanRegisterInfo((prev) => ({
         ...prev,

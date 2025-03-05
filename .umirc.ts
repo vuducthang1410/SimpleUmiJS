@@ -65,17 +65,17 @@ export default defineConfig({
     },
     {
       name: 'Thông tin vay vốn',
-      path: '/loan-product',
+      path: '/loan-info',
       routes: [
         {
           name: 'Lịch sử vay vốn',
-          path: 'loan-product1',
-          component: '@/pages/User/LoanProduct/LoanListActive',
+          path: 'loan-info-history',
+          component: '@/pages/User/Loan/LoanInfoHistory',
         },
         {
-          name: 'Thông tin vay vốn',
-          path: 'loan-product2',
-          component: '@/pages/User/LoanProduct/LoanListActive',
+          name: 'Các khoản đang vay',
+          path: 'loan-info-detai-active',
+          component: '@/pages/User/Loan/LoanInfoHistory/LoanInfoDetailActive',
         },
       ],
       wrappers: ['@/pages/Login/AuthGuard'],

@@ -1,4 +1,4 @@
-import { BaseResponse, LoanInfoApproveRq, LoanRegisterInfo } from '@/types/LoanInfo';
+import { BaseResponse, LoanInfoApproveRq, LoanInfoHistoryRq, LoanRegisterInfo } from '@/types/LoanInfo';
 import generateTransactionId from '@/utils/Transaction';
 import getURL from '@/utils/URL';
 import { request } from '@umijs/max';
@@ -96,6 +96,53 @@ export async function approvedLoanInfo(loanInfoApproveRq: LoanInfoApproveRq) {
             axiosError.response?.data?.data ||
             axiosError.message ||
             'Có lỗi xảy ra khi tạo lãi suất';
+
+        throw new Error(errorMessage);
+    }
+}
+export async function getLoanInfoHistoryByCifCode(LoanInfoHistoryRq: LoanInfoHistoryRq) {
+    try {
+        console.log("first", LoanInfoHistoryRq)
+        return await request<BaseResponse>(
+            getURL() + '/loan-detail-info/get-all-loan-info-by-cif-code',
+            {
+                method: 'GET',
+                params: LoanInfoHistoryRq,
+                headers: {
+                    accept: '*/*',
+                    transactionId: generateTransactionId(),
+                },
+            }
+        )
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        const errorMessage =
+            axiosError.response?.data?.data ||
+            axiosError.message ||
+            'Có lỗi xảy ra lấy thông tin lịch sử vay';
+
+        throw new Error(errorMessage);
+    }
+}
+export async function getLoanInfoActiveByCifCode(pageSize: number, pageNumber: number, cifCode: string) {
+    try {
+        return await request<BaseResponse>(
+            getURL() + '/loan-detail-info/get-all-loan-active',
+            {
+                method: 'GET',
+                params: { cifCode: cifCode, pageNumber: pageNumber, pageSize: pageSize },
+                headers: {
+                    accept: '*/*',
+                    transactionId: generateTransactionId(),
+                },
+            }
+        )
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        const errorMessage =
+            axiosError.response?.data?.data ||
+            axiosError.message ||
+            'Có lỗi xảy ra lấy thông tin lịch sử vay';
 
         throw new Error(errorMessage);
     }
