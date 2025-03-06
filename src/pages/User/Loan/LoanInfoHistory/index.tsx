@@ -4,6 +4,7 @@ import { history, useDispatch } from "@umijs/max";
 import "./LoanHistory.css"
 import { LoanInfoHistory, LoanInfoHistoryRq } from "@/types/LoanInfo";
 import { getUserInfoInLocalStorage } from "@/utils/UserInfo";
+import LoanStatusTag from "@/components/LoanInfo/LoanStatusTag";
 
 const { Option } = Select;
 
@@ -41,7 +42,21 @@ const LoanHistory: React.FC = () => {
         setStatusFilter(value);
         setCurrentPage(1)
     };
-
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case "PENDING":
+                return "#E6A23C";
+            case "APPROVED":
+                return "green";
+            case "REJECTED":
+            case "EXPIRED":
+                return "red";
+            case "CANCEL":
+                return "blue";
+            default:
+                return "black"; // Màu mặc định
+        }
+    };
     return (
         <div className="loan-history-container">
             <Button onClick={() => history.back()}>{'< Quay lại'}</Button>
@@ -71,14 +86,18 @@ const LoanHistory: React.FC = () => {
             ) : (
                 <Row gutter={[16, 16]} className="loan-list">
                     {loanData.map((loan) => (
-                        <Col xs={24} sm={12} md={8} lg={6} key={loan.loanDetailInfoId}>
+                        <Col xs={24} sm={12} md={8} lg={6} key={loan.loanDetailInfoId} style={{ maxWidth: '100%' }}>
                             <Card hoverable className="loan-card">
                                 <div className="loan-info">
                                     <h3 className="loan-title">{loan.loanProductName}</h3>
                                     <p><strong>💰 Số tiền:</strong> {loan.loanAmount.toLocaleString()} VND</p>
                                     <p><strong>📈 Lãi suất:</strong> {loan.interestRate}%</p>
                                     <p><strong>📅 Thời hạn:</strong> {loan.loanTerm} tháng</p>
-                                    <p><strong>🔖 Trạng thái:</strong> {loan.requestStatus}</p>
+                                    <p><strong>🔖 Trạng thái yêu cầu:</strong>     <span style={{ color: getStatusColor(loan.requestStatus) }}>
+                                        {loan.requestStatus}
+                                    </span></p>
+                                    {loan.requestStatus === "APPROVED" &&
+                                        <p><strong>🕒 Trạng thái khoản vay:</strong> <LoanStatusTag status={loan.loanStatus} /></p>}
                                     <p><strong>🕒 Ngày đăng ký vay:</strong> {loan.createdDate}</p>
                                 </div>
                                 <div className="loan-actions">

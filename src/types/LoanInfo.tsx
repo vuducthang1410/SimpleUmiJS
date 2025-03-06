@@ -12,6 +12,19 @@ export interface BaseResponse {
     message: string;
     status: string;
 }
+export interface LoanInfoPaymentScheduleResponse {
+    data: {
+        amountLoanRemaining: string,
+        paymentScheduleRpList: PaymentScheduleRp[]
+    };
+    message: string;
+    status: string;
+}
+export interface PaymentScheduleResponse {
+    data: PaymentScheduleRp[];
+    message: string;
+    status: string;
+}
 export interface LoanApplicant {
     fullName: string;
     formDeftRepayment: string;
@@ -63,5 +76,45 @@ export interface LoanDetailActiveRp {
     loanProductName: string;
     loanTermName: string;
     loanTerm: number;
-    loanDetailInfoId: string
+    loanInfoId: string
+}
+export interface LoanDetailInfoRp {
+    createdDate: string;
+    dateDisbursement: string;
+    douDate: string;
+    interestRate: number;
+    loanAmount: string;
+    loanDetailInfoId: string;
+    loanProductName: string;
+    loanTerm: number;
+    unit: string;
+    loanStatus: string;
+}
+
+export interface LoanDataRp {
+    loanDetailInfo: LoanDetailInfoRp;
+    amountRemainingLoan: number;
+    interestCurrentPeriod: number;
+    amountNeedPayment: number;
+    amountFined: string;
+}
+export interface EarlyFeeRepaymentLoanResponse {
+    data: LoanDataRp;
+    message: string;
+    status: string;
+}
+export interface PaymentScheduleRp {
+    paymentScheduleId: string;
+    nameSchedule: string;
+    dueDate: string;
+    amountRemaining: string;
+    status: string;
+    isPaid: boolean;
+}
+export enum PaymentType {
+    PRINCIPAL = "PRINCIPAL",
+    INTEREST = "INTEREST",
+    PENALTY = "PENALTY",
+    ALL = "ALL",
+    AUTO_REPAYMENT = "AUTO_REPAYMENT",
 }

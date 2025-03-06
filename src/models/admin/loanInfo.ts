@@ -37,6 +37,7 @@ const useLoanDetailInfo: LoanDetailInfoCmsModel = {
     *approvedLoanInfo({ payload }, { call, put }): Generator<any, void, any> {
       yield put({ type: 'setLoading', payload: true });
       try {
+        console.log('first', payload.loanInfoApproveRq);
         const response = yield call(
           approvedLoanInfo,
           payload.loanInfoApproveRq,

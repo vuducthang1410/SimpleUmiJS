@@ -2,24 +2,25 @@ import { CreditCardOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Row, Space, Typography } from 'antd';
 import React from 'react';
 import './LoanInfoDetailCard.css';
+import { LoanDetailActiveRp } from '@/types/LoanInfo';
 
 const { Title, Text } = Typography;
 
 interface LoanProps {
-    loan: {
-        dueDate: string;
-        nextRepaymentDate: string;
-        loanDate: string;
-        loanAmount: string;
-        loanAmountRemaining: string;
-        nextLoanAmountRepayment: string;
-        loanProductName: string;
-        loanTermName: string;
-        loanTerm: number;
-    };
+    loan: LoanDetailActiveRp
+    showModal: (loanInfoId: string) => void,
+    dispatch: (action: { type: string; payload?: any }) => void;
+    showDetailModal: (status: boolean) => void
+
 }
 
-const LoanCard: React.FC<LoanProps> = ({ loan }) => {
+const LoanCard: React.FC<LoanProps> = ({ loan, showModal, dispatch, showDetailModal }) => {
+    const addLoanDetailInfoToDvaModel = () => {
+        dispatch({
+            type: 'loanDetailInfo/updateLoanDetailInfo',
+            payload: loan,
+        });
+    }
     return (
         <Card hoverable className="loan-card">
             {/* Header */}
@@ -80,8 +81,8 @@ const LoanCard: React.FC<LoanProps> = ({ loan }) => {
             {/* Footer với các button */}
             <div className="loan-footer">
                 <Space>
-                    <Button type="default">Chi tiết</Button>
-                    <Button type="primary">Tất toán</Button>
+                    <Button type="default" onClick={() => { addLoanDetailInfoToDvaModel(), showDetailModal(true) }}>Chi tiết</Button>
+                    <Button type="primary" onClick={() => { showModal(loan.loanInfoId) }}>Tất toán</Button>
                 </Space>
             </div>
         </Card>

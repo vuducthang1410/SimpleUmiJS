@@ -1,4 +1,4 @@
-import { BaseResponse, LoanInfoApproveRq, LoanInfoHistoryRq, LoanRegisterInfo } from '@/types/LoanInfo';
+import { BaseResponse, EarlyFeeRepaymentLoanResponse, LoanInfoApproveRq, LoanInfoHistoryRq, LoanInfoPaymentScheduleResponse, LoanRegisterInfo, PaymentScheduleResponse } from '@/types/LoanInfo';
 import generateTransactionId from '@/utils/Transaction';
 import getURL from '@/utils/URL';
 import { request } from '@umijs/max';
@@ -137,6 +137,124 @@ export async function getLoanInfoActiveByCifCode(pageSize: number, pageNumber: n
                 },
             }
         )
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        const errorMessage =
+            axiosError.response?.data?.data ||
+            axiosError.message ||
+            'Có lỗi xảy ra lấy thông tin lịch sử vay';
+
+        throw new Error(errorMessage);
+    }
+}
+export async function getEarlyFeeRepaymentLoan(loanInfoId: string) {
+    try {
+        return await request<EarlyFeeRepaymentLoanResponse>(
+            getURL() + `/loan-detail-info/get-early-payment-penalty-fee/${loanInfoId}`,
+            {
+                method: "GET",
+                headers: {
+                    "accept": "*/*",
+                    "transactionId": generateTransactionId(),
+                },
+            }
+        );
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        const errorMessage =
+            axiosError.response?.data?.data ||
+            axiosError.message ||
+            'Có lỗi xảy ra lấy thông tin lịch sử vay';
+
+        throw new Error(errorMessage);
+    }
+}
+export async function earlyRepaymentLoan(loanInfoId: string) {
+    try {
+        return await request<BaseResponse>(
+            getURL() + `/loan-detail-info/early-payment-loan/${loanInfoId}`,
+            {
+                method: "PUT",
+                headers: {
+                    "accept": "*/*",
+                    "transactionId": generateTransactionId(),
+                },
+            }
+        );
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        const errorMessage =
+            axiosError.response?.data?.data ||
+            axiosError.message ||
+            'Có lỗi xảy ra lấy thông tin lịch sử vay';
+
+        throw new Error(errorMessage);
+    }
+}
+export async function getPaymentScheduleByLoanDetailInfo(loanInfoId: string) {
+    try {
+        return await request<PaymentScheduleResponse>(
+            getURL() + `/payment-schedule/get-list-payment-schedule/${loanInfoId}`,
+            {
+                method: "GET",
+                headers: {
+                    "accept": "*/*",
+                    "transactionId": generateTransactionId(),
+                },
+                params: {
+                    pageSize: 36,
+                    pageNumber: 0
+                }
+            }
+        );
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        const errorMessage =
+            axiosError.response?.data?.data ||
+            axiosError.message ||
+            'Có lỗi xảy ra lấy thông tin lịch sử vay';
+
+        throw new Error(errorMessage);
+    }
+}
+export async function repaymentLoanPeriodTermByPaymentScheduleId(paymentScheduleId: string, paymentType: string) {
+    try {
+        return await request<BaseResponse>(
+            getURL() + `/payment-schedule/repayment-deft-periodically`,
+            {
+                method: "PATCH",
+                headers: {
+                    "accept": "*/*",
+                    "transactionId": generateTransactionId(),
+                },
+                data: {
+                    paymentScheduleId: paymentScheduleId,
+                    paymentType: paymentType
+                }
+            }
+        );
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        const errorMessage =
+            axiosError.response?.data?.data ||
+            axiosError.message ||
+            'Có lỗi xảy ra lấy thông tin lịch sử vay';
+
+        throw new Error(errorMessage);
+    }
+}
+export async function getLoanPeriodTermAfterRepayment(loanDetailInfoId: string, paymentType: string) {
+    try {
+        return await request<LoanInfoPaymentScheduleResponse>(
+            getURL() + `/loan-detail-info/${loanDetailInfoId}`,
+            {
+                method: "GET",
+                headers: {
+                    "accept": "*/*",
+                    "transactionId": generateTransactionId(),
+                }
+            }
+        );
     } catch (error) {
         const axiosError = error as AxiosError;
         const errorMessage =
