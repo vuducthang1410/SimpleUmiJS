@@ -8,8 +8,6 @@ const AuthGuard: React.FC<{ children: JSX.Element }> = ({ children }) => {
     console.log(user)
     if (!user) {
       history.replace('/login');
-    } else {
-      setIsAuthenticated(true);
     }
   }, []);
 

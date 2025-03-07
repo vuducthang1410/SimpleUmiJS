@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Row, Col, Pagination, Spin } from "antd";
-import LoanCard from "./LoanInfoDetailActiveCard";
 import { useDispatch, useSelector } from "@umijs/max";
 import { getUserInfoInLocalStorage } from "@/utils/UserInfo";
 import { LoanDetailActiveRp } from "@/types/LoanInfo";
-import LoanDetailModal from "../PaymentLoan/PaymentLoanEarly";
-import LoanInfoDetailPaymentModal from "@/components/LoanInfo/LoanInfoDetailPaymentModal";
+
+// Lazy load các component
+const LoanCard = lazy(() => import("./LoanInfoDetailActiveCard"));
+const LoanDetailModal = lazy(() => import("../PaymentLoan/PaymentLoanEarly"));
+const LoanInfoDetailPaymentModal = lazy(() => import("@/components/LoanInfo/LoanInfoDetailPaymentModal"));
 
 const pageSize = 6; // Số thẻ trên mỗi trang
 
 const LoanList: React.FC = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -18,22 +20,25 @@ const LoanList: React.FC = () => {
     const { loanDetailInfoList, totalRecord } = useSelector(
         (state: any) => state.loanDetailInfo.fetchLoanDetailInfo,
     );
-    const [loanInfoId, setLoanInfoId] = useState<string>('')
+    const [loanInfoId, setLoanInfoId] = useState<string>("");
+
     const showModal = (loanInfoId: string) => {
         setLoanInfoId(loanInfoId);
-        setIsModalVisible(true)
-    }
+        setIsModalVisible(true);
+    };
+
     useEffect(() => {
-        setLoading(true)
-        const user = getUserInfoInLocalStorage()
+        setLoading(true);
+        const user = getUserInfoInLocalStorage();
         dispatch({
-            type: 'loanDetailInfo/getLoanInfoActiveByCifCode',
+            type: "loanDetailInfo/getLoanInfoActiveByCifCode",
             payload: { pageSize: pageSize, pageNumber: currentPage - 1, cifCode: user.cifCode },
             callback: () => {
-                setLoading(false)
-            }
-        })
+                setLoading(false);
+            },
+        });
     }, [currentPage]);
+
     return (
         <>
             {loading ? (
@@ -43,34 +48,51 @@ const LoanList: React.FC = () => {
                     <Row gutter={[24, 24]} justify="start">
                         {loanDetailInfoList.map((loan: LoanDetailActiveRp, index: number) => (
                             <Col key={index} xs={24} sm={12} md={12} lg={12}>
-                                <LoanCard loan={loan} showModal={showModal} dispatch={dispatch} showDetailModal={setIsModalVisibleDetail} />
+                                <Suspense fallback={<Spin size="small" />}>
+                                    <LoanCard
+                                        loan={loan}
+                                        showModal={showModal}
+                                        dispatch={dispatch}
+                                        showDetailModal={setIsModalVisibleDetail}
+                                    />
+                                </Suspense>
                             </Col>
                         ))}
                     </Row>
 
                     {/* Phân trang */}
-                    {totalRecord > pageSize &&
+                    {totalRecord > pageSize && (
                         <Pagination
                             current={currentPage}
                             total={totalRecord}
                             pageSize={pageSize}
                             onChange={setCurrentPage}
                             style={{ marginTop: 20, textAlign: "center" }}
-                        />}
+                        />
+                    )}
                 </>
-
             )}
-            <LoanDetailModal
-                visible={isModalVisible}
-                onClose={() => setIsModalVisible(false)}
-                loanId={loanInfoId}
-                pageSize={pageSize}
-                currentPage={currentPage}
-            />
-            <LoanInfoDetailPaymentModal
-                visible={isModalVisibleDetail}
-                onClose={() => setIsModalVisibleDetail(false)}
-            />
+
+            {/* Modal với Lazy Loading */}
+            <Suspense fallback={<Spin size="large" />}>
+                {isModalVisible && (
+                    <LoanDetailModal
+                        visible={isModalVisible}
+                        onClose={() => setIsModalVisible(false)}
+                        loanId={loanInfoId}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                    />
+                )}
+            </Suspense>
+
+            <Suspense fallback={<Spin size="large" />}>
+                {isModalVisibleDetail && (
+                    <LoanInfoDetailPaymentModal
+                        visible={isModalVisibleDetail}
+                        onClose={() => setIsModalVisibleDetail(false)} />
+                )}
+            </Suspense>
         </>
     );
 };

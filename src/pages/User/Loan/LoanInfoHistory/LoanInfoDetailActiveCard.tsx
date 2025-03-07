@@ -53,12 +53,18 @@ const LoanCard: React.FC<LoanProps> = ({ loan, showModal, dispatch, showDetailMo
                             <Text strong>Ngày đáo hạn:</Text>
                             <Text>{loan.dueDate}</Text>
                         </Col>
-                        {/* <Col span={12}>
-                            <Text strong>Kỳ hạn:</Text>
+                        <Col span={12}>
+                            <Text strong>Kỳ hạn hiện tại: </Text>
                             <Text>
-                                {loan.loanTermName} ({loan.loanTerm} tháng)
+                                {loan.loanTermName}
                             </Text>
-                        </Col> */}
+                        </Col>
+                        <Col span={12}>
+                            <Text strong>Kỳ hạn vay: </Text>
+                            <Text>
+                                {loan.loanTerm}
+                            </Text>
+                        </Col>
                     </Row>
                 </div>
 
