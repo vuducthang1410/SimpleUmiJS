@@ -94,7 +94,6 @@ export default function getLoanProductForUser(id: string) {
       axiosError.response?.data?.data ||
       axiosError.message ||
       'Có lỗi xảy ra khi tạo lãi suất';
-
     throw new Error(errorMessage);
   }
 }

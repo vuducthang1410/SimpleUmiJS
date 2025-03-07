@@ -17,7 +17,6 @@ const Login: React.FC = () => {
             alert("Sai tài khoản hoặc mật khẩu!");
         }
     };
-
     useEffect(() => {
         if (user !== undefined && user !== null && user.userName !== '') {
             console.log("first", user)

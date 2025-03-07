@@ -49,13 +49,13 @@ export default defineConfig({
       wrappers: ['@/pages/Login/AuthGuard'],
       access: 'isManager',
     },
-    {
-      name: 'Đăng ký thông tin tài chính',
-      path: '/financial-info/register',
-      component: '@/pages/User/FinancialInfo/Register',
-      wrappers: ['@/pages/Login/AuthGuard'],
-      access: 'isUser',
-    },
+    // {
+    //   name: 'Đăng ký thông tin tài chính',
+    //   path: '/financial-info/register',
+    //   component: '@/pages/User/FinancialInfo/Register',
+    //   wrappers: ['@/pages/Login/AuthGuard'],
+    //   access: 'isUser',
+    // },
     {
       name: 'Danh sách sản phẩm vay',
       path: '/loan-product',

@@ -148,9 +148,9 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
           ...state.fetchLoanDetailInfo,
           loanDetailInfoList: state.fetchLoanDetailInfo.loanDetailInfoList
             ? state.fetchLoanDetailInfo.loanDetailInfoList.filter(
-                (item: LoanDetailActiveRp) =>
-                  item.loanInfoId !== payload.loanDetailInfoId,
-              )
+              (item: LoanDetailActiveRp) =>
+                item.loanInfoId !== payload.loanDetailInfoId,
+            )
             : [],
         },
       };

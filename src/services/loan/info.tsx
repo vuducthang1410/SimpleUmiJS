@@ -243,7 +243,8 @@ export async function repaymentLoanPeriodTermByPaymentScheduleId(paymentSchedule
         throw new Error(errorMessage);
     }
 }
-export async function getLoanPeriodTermAfterRepayment(loanDetailInfoId: string, paymentType: string) {
+export async function getLoanPeriodTermAfterRepayment
+(loanDetailInfoId: string, paymentType: string) {
     try {
         return await request<LoanInfoPaymentScheduleResponse>(
             getURL() + `/loan-detail-info/${loanDetailInfoId}`,
