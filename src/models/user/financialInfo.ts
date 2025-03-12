@@ -1,10 +1,11 @@
-import { getInfoFinancialInfoByCifCode } from '@/services/financialInfo/financialInfo';
-import { API } from '@/types/financialInfo';
-import { Effect } from '@umijs/max';
+import { getDetailFinancialInfoByCifCode, getInfoFinancialInfoByCifCode } from '@/services/financialInfo/financialInfo';
+import { API, FinancialDetail } from '@/types/financialInfo';
+import { Effect, Reducer } from '@umijs/max';
 
 export interface FinacialInfo {
   financialInfo: API.FinancialInfoItem | null;
   loading: boolean;
+  financialInfoDetail: FinancialDetail;
 }
 
 export interface RootState {
@@ -14,8 +15,13 @@ export interface RootState {
 export interface FinancialInfoModel {
   namespace: 'financialInfo';
   state: RootState;
-  reducers: {};
-  effects: { getFinancialInfoByCifCode: Effect };
+  reducers: {
+    setFinancialInfo: Reducer<RootState>;
+  };
+  effects: {
+    getFinancialInfoByCifCode: Effect,
+    fetchFinancialInfo: Effect;
+  };
 }
 
 const useFinancialInfo: FinancialInfoModel = {
@@ -24,9 +30,23 @@ const useFinancialInfo: FinancialInfoModel = {
     fetchFinancialInfo: {
       financialInfo: null,
       loading: false,
+      financialInfoDetail: {}
     },
   },
-  reducers: {},
+  reducers: {
+    setFinancialInfo(state, { payload }) {
+      return {
+        ...state,
+        fetchFinancialInfo: {
+          ...state.fetchFinancialInfo,
+          financialInfoDetail: { 
+            ...state.fetchFinancialInfo.financialInfoDetail, // Tạo object mới để Redux nhận diện thay đổi
+            ...payload.financialInfo, // Gán toàn bộ dữ liệu từ API
+          }
+        }
+      };
+    }
+  },
   effects: {
     *getFinancialInfoByCifCode(
       { payload },
@@ -39,8 +59,23 @@ const useFinancialInfo: FinancialInfoModel = {
         );
         console.log('heheh', response);
         payload.callback(response.data);
-      } catch (error) {}
+      } catch (error) { }
     },
+    *fetchFinancialInfo({ payload }, { call, put,select }): Generator<any, void, any> {
+      try {
+        console.log("first")
+        const response = yield call(getDetailFinancialInfoByCifCode, payload?.cifCode || '');
+        yield put({
+          type: 'setFinancialInfo', payload: {
+            financialInfo: response.data
+          }
+        })
+        const data=yield select((state:any)=>state.financialInfo)
+        console.log("rhhr",data)
+      } catch (error) {
+
+      }
+    }
   },
 };
 

@@ -1,4 +1,4 @@
-import { login } from "@/services/auth/auth";
+import { getInfoCustomer, login } from "@/services/auth/auth";
 import { DataToken } from "@/types/DataToken";
 import { User } from "@/types/User";
 import { Effect, Reducer } from "@umijs/max";
@@ -43,7 +43,12 @@ const useAuth: AuthModel = {
     },
     reducers: {
         setCifCodeInUserData(state, action) {
-            return state;
+            return {
+                ...state, user: {
+                    ...state.user,
+                    cifCode: action.payload
+                }
+            };
         },
         setLoading(state: AuthState, action): AuthState {
             return { ...state, loading: action.payload };
@@ -53,6 +58,7 @@ const useAuth: AuthModel = {
                 ...state,
                 user: {
                     ...state.user,
+                    cifCode:action.payload.cifCode,
                     name: action.payload.name,
                     role: action.payload.role,
                     token: action.payload.token,
@@ -74,7 +80,7 @@ const useAuth: AuthModel = {
             return {
                 ...state,
                 user: {
-                    cifCode:action.payload.user?.cifCode||'',
+                    cifCode: action.payload.user?.cifCode || '',
                     name: action.payload.user.name,
                     role: action.payload.user.role,
                     token: action.payload.user.token,
@@ -86,7 +92,6 @@ const useAuth: AuthModel = {
     },
     effects: {
         *getInfoUser(): Generator<any, void, any> {
-
         },
         *login({ payload }, { call, put, select }): Generator<any, void, any> {
             yield put({ type: 'setLoading', payload: true })
@@ -94,21 +99,23 @@ const useAuth: AuthModel = {
                 const response = yield call(login, payload.dataLogin)
                 const accessToken = response.result.access_token
                 const dataToken = jwtDecode<Partial<DataToken>>(accessToken)
-                console.log(response)
+                const responseGetCustomerInfo = yield call(getInfoCustomer, accessToken)
                 yield put({
                     type: 'setUserDataInState',
                     payload: {
                         name: dataToken.name,
                         role: dataToken.realm_access?.roles[0],
-                        token: accessToken
+                        token: accessToken,
+                        cifCode: responseGetCustomerInfo.result.cifCode
                     }
                 })
+                yield put({ type: 'setLoading', payload: false })
+                const data = yield select((state: RootState) => state.auth)
+                localStorage.setItem('user', JSON.stringify(data.user))
             } catch (error) {
                 console.log(error)
             }
-            yield put({ type: 'setLoading', payload: false })
-            const data = yield select((state: RootState) => state.auth)
-            localStorage.setItem('user', JSON.stringify(data.user))
+
         },
         *logout({ payload }, { put, select }): Generator<any, void, any> {
             const user = yield select((state: RootState) => state.auth.user);

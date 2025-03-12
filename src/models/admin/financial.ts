@@ -1,5 +1,5 @@
-import { fetchFinancialInfo } from "@/services/financialInfo/financialInfo";
-import { API } from "@/types/financialInfo";
+import { fetchFinancialInfo, getInfoFinancialInfoByCifCode } from "@/services/financialInfo/financialInfo";
+import { API, FinancialDetail } from "@/types/financialInfo";
 import { Effect, Reducer } from "@umijs/max";
 export interface FinancialInfoState {
   list: API.FinancialInfoItem[];
@@ -9,6 +9,7 @@ export interface FinancialInfoState {
 export interface FinancialInfoModel {
   namespace: 'financialInfoAdmin',
   state: FinancialInfoState
+
   reducer: {
     setState: Reducer<FinancialInfoState>;
   },
@@ -19,11 +20,13 @@ export interface FinancialInfoModel {
 }
 const useFinancialInfo: FinancialInfoModel = {
   namespace: 'financialInfoAdmin',
-  state: { list: [], totalRecords: 0, isLoading: false },
+  state: {
+    list: [], totalRecords: 0, isLoading: false,
+  },
   reducer: {
     setState(state, action) {
       return { ...state, list: action.listFinancialInfo, totalRecords: action.payload.totalRecords }
-    }
+    },
   },
   effects: {
     *fetchList({ payload }, { call, put }): Generator<any, void, any> {

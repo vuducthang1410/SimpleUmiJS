@@ -1,3 +1,4 @@
+import { CustomerFinancialResponse } from './../../types/financialInfo';
 import { API } from '@/types/financialInfo';
 import request from '@/utils/request';
 import generateTransactionId from '@/utils/Transaction';
@@ -27,6 +28,28 @@ export async function getInfoFinancialInfoByCifCode(cifCode: string) {
       {
         method: 'GET',
         params: { cifCode },
+        headers: {
+          accept: '*/*',
+          transactionId: generateTransactionId(),
+        },
+      },
+    );
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    const errorMessage =
+      axiosError.response?.data?.data ||
+      axiosError.message ||
+      'Có lỗi xảy ra khi tạo lãi suất';
+
+    throw new Error(errorMessage);
+  }
+}
+export async function getDetailFinancialInfoByCifCode(cifCode: string) {
+  try {
+    return await request<CustomerFinancialResponse>(
+      APIConfig.LOAN_URL +`/financial-info/individual-customer/get-detail-info-active/${cifCode}`,
+      {
+        method: 'GET',
         headers: {
           accept: '*/*',
           transactionId: generateTransactionId(),

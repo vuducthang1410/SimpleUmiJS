@@ -38,7 +38,8 @@ const Login: React.FC = () => {
   }, [user]);
 
   return (
-    <div className="login-container">
+    <div className='login-page' style={{width:'100%',height:'100vh',display:'flex',justifyContent:'center',alignItems:'center'}}>
+     <div className="login-container">
       <div className="login-box">
         {/* Logo Doanh Nghiệp */}
         <img
@@ -92,7 +93,9 @@ const Login: React.FC = () => {
           <a onClick={() => history.push('/register')}>Đăng ký ngay</a>
         </p>
       </div>
+    </div>     
     </div>
+
   );
 };
 

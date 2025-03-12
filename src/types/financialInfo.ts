@@ -28,9 +28,27 @@ export namespace API {
     amountLoanLimit: number;
   }
 
-  export interface FinancialInfoResponse {
+export interface FinancialInfoResponse {
     financialInfoRq: FinancialInfoRp;
     message: string;
     status: string;
   }
+}
+export interface FinancialDetail {
+  customerId?: string;
+  customerName?: string;
+  numberPhone?: string;
+  identificationNumber?: string;
+  dateOfBirth?: string;
+  financialInfoId?: string;
+  amountLoanLimit?: string;
+  amountMaybeLoanRemain?: string;
+  requestStatus?: string;
+  balanceBankingAccount?: string;
+  bankingAccountNumber?: string;
+}
+export interface CustomerFinancialResponse {
+  datadata: FinancialDetail;
+  message: string;
+  status: string;
 }

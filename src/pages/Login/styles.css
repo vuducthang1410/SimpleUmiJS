@@ -1,5 +1,5 @@
 /* Tổng thể trang */
-body {
+/* body {
     font-family: "Poppins", sans-serif;
     background: #f4f4f4;
     margin: 0;
@@ -8,7 +8,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-}
+} */
 
 /* Khung đăng nhập */
 .login-container {
