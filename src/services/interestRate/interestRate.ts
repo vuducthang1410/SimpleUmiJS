@@ -1,12 +1,13 @@
+import { API } from '@/types/financialInfo';
 import { InterestRate, InterestRateRq } from '@/types/InterestRate';
 import generateTransactionId from '@/utils/Transaction';
-import getURL from '@/utils/URL';
+import APIConfig from '@/utils/URL';
 import { AxiosError, request } from '@umijs/max';
 
 export async function createInterestRate(interestRate: InterestRateRq) {
   try {
     return await request<APIResponseInterestRate>(
-      getURL() + '/interest-rate/save',
+      APIConfig.LOAN_URL + '/interest-rate/save',
       {
         method: 'POST',
         headers: {
@@ -33,7 +34,7 @@ export async function getInterestRateByLoanProductId(
   pageSize = 12,
 ) {
   return request<LoanProductResponse>(
-    getURL() + `/interest-rate/get-all-loan-product/${loanProductId}`,
+    APIConfig.LOAN_URL + `/interest-rate/get-all-loan-product/${loanProductId}`,
     {
       method: 'GET',
       headers: {

@@ -1,6 +1,7 @@
 export interface User {
-  userName: string;
+  name: string;
   token: string;
   role: string;
   cifCode: string;
+  isLogin:boolean
 }

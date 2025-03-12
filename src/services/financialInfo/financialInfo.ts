@@ -1,29 +1,29 @@
 import { API } from '@/types/financialInfo';
+import request from '@/utils/request';
 import generateTransactionId from '@/utils/Transaction';
-import getURL from '@/utils/URL';
-import { request } from '@umijs/max';
+import APIConfig from '@/utils/URL';
 
-export async function fetchFinancialInfo() {
+export async function fetchFinancialInfo(status:string) {
   return request<API.FinancialInfoListResponse>(
-    getURL() + '/financial-info/individual-customer/get-all-info-by-status',
-    {
-      method: 'GET',
-      params: {
-        pageNumber: 0,
-        pageSize: 12,
-        status: 'PENDING',
-      },
-      headers: {
-        accept: '*/*',
-        transactionId: generateTransactionId(),
-      },
+    APIConfig.LOAN_URL + '/financial-info/individual-customer/get-all-info-by-status',
+  {
+    method: 'GET',
+    params: {
+      pageNumber: 0,
+      pageSize: 12,
+      status: status,
     },
+    headers: {
+      accept: '*/*',
+      transactionId: generateTransactionId(),
+    },
+  },
   );
 }
 export async function getInfoFinancialInfoByCifCode(cifCode: string) {
   try {
     return await request<API.FinancialInfoResponse>(
-      getURL() + '/financial-info/individual-customer/financial-info/get-info',
+      APIConfig.LOAN_URL + '/financial-info/individual-customer/financial-info/get-info',
       {
         method: 'GET',
         params: { cifCode },

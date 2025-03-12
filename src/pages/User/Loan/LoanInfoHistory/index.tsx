@@ -58,7 +58,7 @@ const LoanHistory: React.FC = () => {
         }
     };
     return (
-        <div className="loan-history-container">
+        <div className="loan-history-container" style={{width:'100%',height:'100%'}}>
             <Button onClick={() => history.back()}>{'< Quay lại'}</Button>
             <h2>Lịch sử vay vốn</h2>
 

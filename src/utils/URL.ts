@@ -1,3 +1,7 @@
-export default function getURL() {
-  return 'http://10.3.245.23:8084/api/v1';
+class APIConfig {
+  static BASE_URL = 'http://localhost:8080';
+  static LOAN_URL = this.BASE_URL+'/loan/api/v1';
+  static CUSTOMER_URL = this.BASE_URL+'/customer/api/v1';
 }
+
+export default APIConfig;

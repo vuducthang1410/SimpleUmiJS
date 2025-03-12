@@ -2,12 +2,11 @@ import { User } from './types/User';
 
 export default function access(initialState: { currentUser?: User | null }) {
   const { currentUser } = initialState || { currentUser: null };
-
   return {
-    isAdmin: currentUser?.role === 'admin',
-    isManager: currentUser?.role === 'manager',
-    isUser: currentUser?.role === 'user',
+    isAdmin: currentUser?.role === 'ADMIN',
+    isManager: currentUser?.role === 'STAFF',
+    isUser: currentUser?.role === 'CUSTOMER',
     isAdminOrManager:
-      currentUser?.role === 'admin' || currentUser?.role === 'manager',
+      currentUser?.role === 'ADMIN' || currentUser?.role === 'manager',
   };
 }

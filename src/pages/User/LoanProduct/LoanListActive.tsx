@@ -23,6 +23,9 @@ const LoanListActive: React.FC = () => {
   useEffect(() => {
     console.log('data', loanProductList);
   }, [loanProductList]);
+  useEffect(()=>{
+    console.log(loading)
+  },[loading])
   return (
     <App>
       <Spin spinning={loading}>

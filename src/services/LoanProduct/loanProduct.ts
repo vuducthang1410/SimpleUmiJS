@@ -5,6 +5,7 @@ import {
   LoanProduct,
 } from '@/types/LoanProduct';
 import generateTransactionId from '@/utils/Transaction';
+import APIConfig from '@/utils/URL';
 import getURL from '@/utils/URL';
 import { AxiosError, request } from '@umijs/max';
 export async function fetchLoanProducts(
@@ -13,7 +14,7 @@ export async function fetchLoanProducts(
   pageSize = 12,
 ) {
   return request<APIResponseListLoanProduct>(
-    getURL() + '/loan-product/get-all-by-active',
+    APIConfig.LOAN_URL + '/loan-product/get-all-by-active',
     {
       method: 'GET',
       params: { active, pageNumber, pageSize },
@@ -22,7 +23,7 @@ export async function fetchLoanProducts(
   );
 }
 export async function createLoanProduct(loanProduct: LoanProduct) {
-  return request<APIResponseListLoanProduct>(getURL() + '/loan-product/save', {
+  return request<APIResponseListLoanProduct>(APIConfig.LOAN_URL + '/loan-product/save', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -32,7 +33,7 @@ export async function createLoanProduct(loanProduct: LoanProduct) {
   });
 }
 export async function deleteLoanProduct(id: string) {
-  return request(getURL() + `/loan-product/delete/${id}`, {
+  return request(APIConfig.LOAN_URL + `/loan-product/delete/${id}`, {
     method: 'DELETE',
     headers: {
       accept: '*/*',
@@ -41,13 +42,13 @@ export async function deleteLoanProduct(id: string) {
   });
 }
 export async function getDetailLoanProduct(id: string) {
-  return request<APIResponseLoanProduct>(getURL() + `/loan-product/${id}`, {
+  return request<APIResponseLoanProduct>(APIConfig.LOAN_URL + `/loan-product/${id}`, {
     method: 'GET',
     headers: { transactionId: generateTransactionId() },
   });
 }
 export async function activedLoanProductApi(id: string) {
-  return request(getURL() + `/loan-product/active/${id}`, {
+  return request(APIConfig.LOAN_URL + `/loan-product/active/${id}`, {
     method: 'PATCH',
     headers: {
       accept: '*/*',
@@ -58,7 +59,7 @@ export async function activedLoanProductApi(id: string) {
 export async function getListLoanProductForUser(pageSize = 12, pageNum = 0) {
   try {
     return await request<APIResponseListLoanProductForUser>(
-      getURL() + '/loan-product/get-all-loan-product-active',
+      APIConfig.LOAN_URL + '/loan-product/get-all-loan-product-active',
       {
         method: 'GET',
         headers: {
@@ -82,7 +83,7 @@ export async function getListLoanProductForUser(pageSize = 12, pageNum = 0) {
 export default function getLoanProductForUser(id: string) {
   try {
     return request<APIResponseLoanProduct>(
-      getURL() + `/loan-product/loan-product-detail/${id}`,
+      APIConfig.LOAN_URL + `/loan-product/loan-product-detail/${id}`,
       {
         method: 'GET',
         headers: { transactionId: generateTransactionId() },

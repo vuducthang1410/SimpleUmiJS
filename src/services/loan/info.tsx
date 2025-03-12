@@ -1,5 +1,6 @@
 import { BaseResponse, EarlyFeeRepaymentLoanResponse, LoanInfoApproveRq, LoanInfoHistoryRq, LoanInfoPaymentScheduleResponse, LoanRegisterInfo, PaymentScheduleResponse } from '@/types/LoanInfo';
 import generateTransactionId from '@/utils/Transaction';
+import APIConfig from '@/utils/URL';
 import getURL from '@/utils/URL';
 import { request } from '@umijs/max';
 
@@ -9,7 +10,7 @@ export const getLoanApplicants = async (
     pageSize: number = 12,
 ) => {
     const response = await request(
-        getURL() + '/loan-detail-info/get-all-by-loan-status',
+        APIConfig.LOAN_URL + '/loan-detail-info/get-all-by-loan-status',
         {
             method: 'GET',
             params: {
@@ -34,7 +35,7 @@ export const updateLoanDisbursementStatus = async (
 ) => {
     try {
         const response = await request(
-            getURL() + '/loan-detail-info/individual-customer/approve-disbursement',
+            APIConfig.LOAN_URL + '/loan-detail-info/individual-customer/approve-disbursement',
             {
                 method: 'PATCH',
                 headers: {
@@ -57,7 +58,7 @@ export const updateLoanDisbursementStatus = async (
 export async function registerLoanInfo(loanRegisterInfo: LoanRegisterInfo) {
     try {
         return await request<BaseResponse>(
-            getURL() + '/loan-detail-info/individual-customer/register-loan',
+            APIConfig.LOAN_URL + '/loan-detail-info/individual-customer/register-loan',
             {
                 method: 'POST',
                 data: loanRegisterInfo,
@@ -80,7 +81,7 @@ export async function registerLoanInfo(loanRegisterInfo: LoanRegisterInfo) {
 export async function approvedLoanInfo(loanInfoApproveRq: LoanInfoApproveRq) {
     try {
         return await request<BaseResponse>(
-            getURL() + '/loan-detail-info/individual-customer/approve-disbursement',
+            APIConfig.LOAN_URL + '/loan-detail-info/individual-customer/approve-disbursement',
             {
                 method: 'PATCH',
                 data: loanInfoApproveRq,
@@ -104,7 +105,7 @@ export async function getLoanInfoHistoryByCifCode(LoanInfoHistoryRq: LoanInfoHis
     try {
         console.log("first", LoanInfoHistoryRq)
         return await request<BaseResponse>(
-            getURL() + '/loan-detail-info/get-all-loan-info-by-cif-code',
+            APIConfig.LOAN_URL + '/loan-detail-info/get-all-loan-info-by-cif-code',
             {
                 method: 'GET',
                 params: LoanInfoHistoryRq,
@@ -127,7 +128,7 @@ export async function getLoanInfoHistoryByCifCode(LoanInfoHistoryRq: LoanInfoHis
 export async function getLoanInfoActiveByCifCode(pageSize: number, pageNumber: number, cifCode: string) {
     try {
         return await request<BaseResponse>(
-            getURL() + '/loan-detail-info/get-all-loan-active',
+            APIConfig.LOAN_URL + '/loan-detail-info/get-all-loan-active',
             {
                 method: 'GET',
                 params: { cifCode: cifCode, pageNumber: pageNumber, pageSize: pageSize },
@@ -150,7 +151,7 @@ export async function getLoanInfoActiveByCifCode(pageSize: number, pageNumber: n
 export async function getEarlyFeeRepaymentLoan(loanInfoId: string) {
     try {
         return await request<EarlyFeeRepaymentLoanResponse>(
-            getURL() + `/loan-detail-info/get-early-payment-penalty-fee/${loanInfoId}`,
+            APIConfig.LOAN_URL + `/loan-detail-info/get-early-payment-penalty-fee/${loanInfoId}`,
             {
                 method: "GET",
                 headers: {
@@ -172,7 +173,7 @@ export async function getEarlyFeeRepaymentLoan(loanInfoId: string) {
 export async function earlyRepaymentLoan(loanInfoId: string) {
     try {
         return await request<BaseResponse>(
-            getURL() + `/loan-detail-info/early-payment-loan/${loanInfoId}`,
+            APIConfig.LOAN_URL + `/loan-detail-info/early-payment-loan/${loanInfoId}`,
             {
                 method: "PUT",
                 headers: {
@@ -194,7 +195,7 @@ export async function earlyRepaymentLoan(loanInfoId: string) {
 export async function getPaymentScheduleByLoanDetailInfo(loanInfoId: string) {
     try {
         return await request<PaymentScheduleResponse>(
-            getURL() + `/payment-schedule/get-list-payment-schedule/${loanInfoId}`,
+            APIConfig.LOAN_URL + `/payment-schedule/get-list-payment-schedule/${loanInfoId}`,
             {
                 method: "GET",
                 headers: {
@@ -220,7 +221,7 @@ export async function getPaymentScheduleByLoanDetailInfo(loanInfoId: string) {
 export async function repaymentLoanPeriodTermByPaymentScheduleId(paymentScheduleId: string, paymentType: string) {
     try {
         return await request<BaseResponse>(
-            getURL() + `/payment-schedule/repayment-deft-periodically`,
+            APIConfig.LOAN_URL + `/payment-schedule/repayment-deft-periodically`,
             {
                 method: "PATCH",
                 headers: {
@@ -247,7 +248,7 @@ export async function getLoanPeriodTermAfterRepayment
 (loanDetailInfoId: string, paymentType: string) {
     try {
         return await request<LoanInfoPaymentScheduleResponse>(
-            getURL() + `/loan-detail-info/${loanDetailInfoId}`,
+            APIConfig.LOAN_URL + `/loan-detail-info/${loanDetailInfoId}`,
             {
                 method: "GET",
                 headers: {

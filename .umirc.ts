@@ -34,28 +34,21 @@ export default defineConfig({
       path: '/admin/financial-info',
       component: './Admin/FinancialInfo',
       wrappers: ['@/pages/Login/AuthGuard'],
-      access: 'isAdminOrManager',
+      access: 'isAdmin',
     },
     {
       name: 'Sản phẩm vay',
       path: '/admin/loan-product',
       component: './Admin/LoanProduct',
       wrappers: ['@/pages/Login/AuthGuard'],
-      access: 'isManager',
+      access: 'isAdmin',
     },
     {
       path: '/admin/loan-product/detail/:id',
       component: './Admin/LoanProduct/LoanProductDetail',
       wrappers: ['@/pages/Login/AuthGuard'],
-      access: 'isManager',
+      access: 'isAdmin',
     },
-    // {
-    //   name: 'Đăng ký thông tin tài chính',
-    //   path: '/financial-info/register',
-    //   component: '@/pages/User/FinancialInfo/Register',
-    //   wrappers: ['@/pages/Login/AuthGuard'],
-    //   access: 'isUser',
-    // },
     {
       name: 'Danh sách sản phẩm vay',
       path: '/loan-product',
@@ -98,7 +91,7 @@ export default defineConfig({
       path: '/login',
       component: './Login',
       layout: false,
-    },
+    }
   ],
   npmClient: 'pnpm',
 });

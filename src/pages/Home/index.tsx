@@ -1,15 +1,26 @@
-import { trim } from '@/utils/format';
-import { PageContainer } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
+import { useSelector } from '@umijs/max';
+import { useEffect } from 'react';
+import FinancialStatusStepForm from './User/FinancialStatus';
 
 const HomePage: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
-  return (
-    <PageContainer ghost style={{ width: "1000px", height: "100px" }}>
-      <div>
-        <div style={{ color: 'red' }}>Hello {initialState?.currentUser?.userName} </div>
-      </div>
-    </PageContainer>
+  const { user } = useSelector((state: any) => state.auth);
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+  return user == undefined || user.role === 'CUSTOMER' ? (
+    <div
+      className="home-page"
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+      }}
+    >
+      <FinancialStatusStepForm />
+    </div>
+  ) : (
+    <></>
   );
 };
 
