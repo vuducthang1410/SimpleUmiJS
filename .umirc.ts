@@ -8,7 +8,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: 'HTQLKHV',
+    title: 'KLB-Banking',
   },
   routes: [
     {
@@ -74,12 +74,12 @@ export default defineConfig({
       wrappers: ['@/pages/Login/AuthGuard'],
       access: 'isUser',
     },
-    {
-      path: '/loan-product/:id',
-      component: '@/pages/User/LoanProduct/LoanProductDetail',
-      wrappers: ['@/pages/Login/AuthGuard'],
-      access: 'isUser',
-    },
+    // {
+    //   path: '/loan-product/:id',
+    //   component: '@/pages/User/LoanProduct/LoanProductDetail',
+    //   wrappers: ['@/pages/Login/AuthGuard'],
+    //   access: 'isUser',
+    // },
 
     {
       name: 'Đăng xuất',

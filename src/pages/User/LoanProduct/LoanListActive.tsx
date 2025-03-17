@@ -1,43 +1,64 @@
+import { DataCallback } from '@/types/InterestRate';
 import { LoanProductForUserRp } from '@/types/LoanProduct';
-import { history, useDispatch, useSelector } from '@umijs/max';
-import { App, Button, Card, List, Spin, Tag, Typography } from 'antd';
+import { useDispatch, useSelector } from '@umijs/max';
+import { App, Button, Card, List, message, Spin, Tag, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import LoanRegistrationForm from '../Loan/RegisterFormModal';
+import LoanProductDetailDrawer from './LoanProductDetail';
 const LoanListActive: React.FC = () => {
   const dispatch = useDispatch();
   const { loanProductList, loading } = useSelector(
     (state: any) => state.loanProductForUser,
   );
-  const [openModalId, setOpenModalId] = useState<string | null>(null);
-  const navigateToDetail = (id: string) => {
-    history.push(`${'/loan-product/' + id}`);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null,
+  );
+  const { financialInfoDetail } = useSelector(
+    (state: any) => state.financialInfo.fetchFinancialInfo,
+  );
+  const openDrawer = (id: string) => {
+    setSelectedProductId(id);
+    setIsDrawerOpen(true);
   };
-
+  const [openModalId, setOpenModalId] = useState<string | null>(null);
   useEffect(() => {
     dispatch({
       type: 'loanProductForUser/fetchLoanProducts',
       payload: { pageNumber: 0, pageSize: 10 },
+      callback: (response: DataCallback) => {
+        if (response.isSuccess) {
+          message.success(response.message);
+        } else {
+          message.error(response.message);
+        }
+      },
     });
   }, [dispatch]);
+  const checkFinancialIsValid = () =>
+    financialInfoDetail &&
+    Object.keys(financialInfoDetail).length > 0 &&
+    financialInfoDetail.financialInfoId;
 
+  const pushNotiWarnResgisterFinancial = () => {
+    message.warning('Vui lòng đăng ký thông tin tài chính để tiếp tục');
+  };
   useEffect(() => {
     console.log('data', loanProductList);
   }, [loanProductList]);
-  useEffect(()=>{
-    console.log(loading)
-  },[loading])
+
   return (
     <App>
       <Spin spinning={loading}>
         <List
           grid={{
             gutter: 16,
-            column: 4, // Mặc định là 4 cột
+            column: 3, // Mặc định là 4 cột
             xs: 1, // Mobile: 1 cột
             sm: 2, // Màn hình nhỏ: 2 cột
             md: 3, // Tablet: 3 cột
-            lg: 4, // Màn hình lớn: 4 cột
-            xl: 4, // Màn hình cực lớn: 4 cột
+            lg: 3, // Màn hình lớn: 4 cột
+            xl: 3, // Màn hình cực lớn: 4 cột
           }}
           dataSource={loanProductList}
           renderItem={(item: LoanProductForUserRp) => (
@@ -51,7 +72,7 @@ const LoanListActive: React.FC = () => {
                     style={{ height: 150, objectFit: 'cover' }}
                   />
                 }
-                style={{ width: '100%' }}
+                style={{ width: '100%', maxWidth: 300, margin: 'auto' }}
               >
                 <Typography.Title level={4}>
                   {item.nameLoanProduct}
@@ -71,12 +92,24 @@ const LoanListActive: React.FC = () => {
                 <div
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                  <Button onClick={() => navigateToDetail(item.loanProductId)}>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      console.log('v');
+                      if (checkFinancialIsValid())
+                        openDrawer(item.loanProductId);
+                      else pushNotiWarnResgisterFinancial();
+                    }}
+                  >
                     Xem chi tiết
                   </Button>
                   <Button
                     type="primary"
-                    onClick={() => setOpenModalId(item.loanProductId)}
+                    onClick={() => {
+                      if (checkFinancialIsValid())
+                        setOpenModalId(item.loanProductId);
+                      else pushNotiWarnResgisterFinancial();
+                    }}
                   >
                     Đăng ký vay
                   </Button>
@@ -97,6 +130,13 @@ const LoanListActive: React.FC = () => {
             </List.Item>
           )}
         />
+        {selectedProductId && (
+          <LoanProductDetailDrawer
+            open={isDrawerOpen}
+            onClose={() => setIsDrawerOpen(false)}
+            loanProductId={selectedProductId}
+          />
+        )}
       </Spin>
     </App>
   );

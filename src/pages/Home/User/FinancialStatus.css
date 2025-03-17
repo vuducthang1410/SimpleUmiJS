@@ -1,0 +1,10 @@
+@media (max-width: 768px) {
+  .card-container {
+    width: 100% !important;
+  }
+}
+@media (max-width: 768px) {
+  .box-container {
+    padding: 0 !important;;
+  }
+}

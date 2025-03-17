@@ -1,14 +1,3 @@
-/* Tổng thể trang */
-/* body {
-    font-family: "Poppins", sans-serif;
-    background: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-} */
 
 /* Khung đăng nhập */
 .login-container {
@@ -60,14 +49,16 @@
 .system-title {
     font-size: 18px;
     font-weight: bold;
-    color: #333;
+    /* color: #333; */
+    color: #ff8e2e;
     margin-bottom: 10px;
 }
 
 /* Tiêu đề đăng nhập */
 h2 {
     font-size: 24px; /* Tăng kích thước để nổi bật hơn */
-    color: #ff8e2e;
+    /* color: #ff8e2e; */
+    color: #333;
     font-weight: bold;
     margin-bottom: 20px; /* Tạo khoảng cách rõ ràng với form nhập */
     margin-top: 10px; 

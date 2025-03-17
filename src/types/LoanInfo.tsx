@@ -8,7 +8,7 @@ export interface LoanRegisterInfo {
 }
 
 export interface BaseResponse {
-    data: string;
+    data: string[];
     message: string;
     status: string;
 }

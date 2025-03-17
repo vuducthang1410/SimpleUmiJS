@@ -1,4 +1,5 @@
 import { API } from '@/types/financialInfo';
+import { DataCallback } from '@/types/InterestRate';
 import { LoanRegisterInfo } from '@/types/LoanInfo';
 import { getUserInfoInLocalStorage } from '@/utils/UserInfo';
 import { useDispatch, useSelector } from '@umijs/max';
@@ -47,7 +48,7 @@ const LoanRegistrationForm: React.FC<DataProps> = ({
     loanTerm: 0,
     loanUnit: '',
   });
-  const handleChange = (key: string, value) => {
+  const handleChange = (key: string, value:any) => {
     setLoanRegisterInfo((prev) => ({ ...prev, [key]: value }));
   };
   const pushNoti = (messageNoti: string, isSuccess: boolean) => {
@@ -61,7 +62,14 @@ const LoanRegistrationForm: React.FC<DataProps> = ({
     }
     dispatch({
       type: 'loanDetailInfo/registerLoanInfo',
-      payload: { loanDetailInfo: loanRegisterInfo, callbackSetStatusModal: setIsModalOpen, callbackPushNoti: pushNoti }
+      payload: { loanDetailInfo: loanRegisterInfo, callbackSetStatusModal: setIsModalOpen },
+        callback:(response:DataCallback)=>{
+            if(response.isSuccess){
+                message.success(response.message)
+            }else{
+                message.error(response.message)
+            }
+        }
     })
   };
   useEffect(() => {

@@ -1,8 +1,9 @@
-import { API } from '@/types/financialInfo';
 import { InterestRate, InterestRateRq } from '@/types/InterestRate';
+import { BaseResponse } from '@/types/LoanInfo';
+import { handleApiError } from '@/utils/error';
+import request from '@/utils/request';
 import generateTransactionId from '@/utils/Transaction';
 import APIConfig from '@/utils/URL';
-import { AxiosError, request } from '@umijs/max';
 
 export async function createInterestRate(interestRate: InterestRateRq) {
   try {
@@ -17,14 +18,8 @@ export async function createInterestRate(interestRate: InterestRateRq) {
         data: interestRate,
       },
     );
-  } catch (error) {
-    const axiosError = error as AxiosError;
-    const errorMessage =
-      axiosError.response?.data?.data ||
-      axiosError.message ||
-      'Có lỗi xảy ra khi tạo lãi suất';
-
-    throw new Error(errorMessage);
+  } catch (error: any) {
+    await handleApiError(error)
   }
 }
 
@@ -33,7 +28,8 @@ export async function getInterestRateByLoanProductId(
   pageNumber = 0,
   pageSize = 12,
 ) {
-  return request<LoanProductResponse>(
+  try {
+   return request<LoanProductResponse>(
     APIConfig.LOAN_URL + `/interest-rate/get-all-loan-product/${loanProductId}`,
     {
       method: 'GET',
@@ -43,7 +39,11 @@ export async function getInterestRateByLoanProductId(
       },
       params: { pageNumber, pageSize },
     },
-  );
+  );   
+  } catch (error) {
+    await handleApiError(error)
+  }
+
 }
 export interface APIResponseInterestRate {
   data: string;

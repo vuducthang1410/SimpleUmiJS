@@ -17,3 +17,10 @@ const getLoanStatusInfo = (status: string) => {
   }
 };
 export default getLoanStatusInfo;
+export const formatCurrency = (value: string) => {
+  const numericValue = value.replace(/\D/g, ""); 
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(Number(numericValue));
+};

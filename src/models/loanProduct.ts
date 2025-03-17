@@ -6,6 +6,7 @@ import {
   getDetailLoanProduct,
 } from '@/services/LoanProduct/loanProduct';
 import { LoanProductRp } from '@/types/LoanProduct';
+import { getErrorData } from '@/utils/error';
 import { Effect, Reducer } from '@umijs/max';
 
 export interface LoanProductState {
@@ -59,7 +60,7 @@ const useLoanProduct: LoanProductModel = {
   },
 
   effects: {
-    *fetchLoanProducts({ payload }, { call, put }): Generator<any, void, any> {
+    *fetchLoanProducts({ payload, callback }, { call, put }): Generator<any, void, any> {
       try {
         const response = yield call(
           fetchLoanProducts,
@@ -76,8 +77,17 @@ const useLoanProduct: LoanProductModel = {
         } else {
           console.warn('Không có dữ liệu sản phẩm vay.');
         }
-      } catch (error) {
-        console.error('Lỗi khi fetch dữ liệu sản phẩm vay:', error);
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
       }
     },
 
@@ -86,47 +96,72 @@ const useLoanProduct: LoanProductModel = {
       { call },
     ): Generator<any, void, any> {
       try {
-        yield call(createLoanProduct, payload);
+        const response = yield call(createLoanProduct, payload);
         console.log('Tạo sản phẩm vay thành công!');
-        if (callback) callback(); // Gọi callback sau khi tạo thành công
-      } catch (error) {
-        console.error('Lỗi khi tạo sản phẩm vay:', error);
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
       }
     },
 
     *deleteLoanProductById(
-      { payload },
+      { payload, callback },
       { call, put },
     ): Generator<any, void, any> {
       try {
-        yield call(deleteLoanProduct, payload.id);
+        const response = yield call(deleteLoanProduct, payload.id);
         yield put({
           type: 'removeLoanProduct',
           payload: { productId: payload.id },
         });
-        console.log('Xóa sản phẩm vay thành công!');
-      } catch (error) {
-        console.error('Lỗi khi xóa sản phẩm vay:', error);
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
       }
     },
 
-    *getLoanProductById({ payload }, { call }): Generator<any, void, any> {
+    *getLoanProductById({ payload, callback }, { call }): Generator<any, void, any> {
       try {
         const response = yield call(getDetailLoanProduct, payload.id);
         console.log(response?.data);
         if (payload.callback) {
           payload.callback(response?.data);
         }
-      } catch (error) {
-        console.error('Lỗi khi lấy chi tiết sản phẩm vay:', error);
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
       }
     },
     *activedLoanProduct(
-      { payload },
+      { payload, callback },
       { call, put, select },
     ): Generator<any, void, any> {
       try {
-        const { id, callback, isUnActive } = payload;
+        const { id, isUnActive } = payload;
         const response = yield call(activedLoanProductApi, id);
         console.log('Kích hoạt sản phẩm vay thành công:', response);
 
@@ -143,11 +178,18 @@ const useLoanProduct: LoanProductModel = {
               totalRecords: totalRecords > 0 ? totalRecords - 1 : 0,
             },
           });
-        } else if (callback) {
-          callback();
         }
-      } catch (error) {
-        console.error('Lỗi khi kích hoạt sản phẩm vay:', error);
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
       }
     },
   },

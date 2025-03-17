@@ -4,10 +4,10 @@ import {
   APIResponseLoanProduct,
   LoanProduct,
 } from '@/types/LoanProduct';
+import request from '@/utils/request';
 import generateTransactionId from '@/utils/Transaction';
 import APIConfig from '@/utils/URL';
-import getURL from '@/utils/URL';
-import { AxiosError, request } from '@umijs/max';
+import { AxiosError} from '@umijs/max';
 export async function fetchLoanProducts(
   active: boolean,
   pageNumber = 0,

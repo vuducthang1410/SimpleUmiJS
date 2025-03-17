@@ -1,4 +1,5 @@
 import { getLoanApplicants } from '@/services/loan/info';
+import { DataCallback } from '@/types/InterestRate';
 import { LoanApplicant, LoanInfoApproveRq } from '@/types/LoanInfo';
 import { useDispatch } from '@umijs/max';
 import { message } from 'antd';
@@ -36,8 +37,15 @@ export const useLoanApplicants = () => {
       payload: {
         loanInfoApproveRq: loanInfoApproveRq,
         cbLoadData: loadLoanApplicants,
-        cbPushNoti: pushNoti,
-      },
+      }
+      ,
+      callback: (response: DataCallback) => {
+        if (response.isSuccess) {
+          message.success(response.message)
+        } else {
+          message.error(response.message)
+        }
+      }
     });
   };
 

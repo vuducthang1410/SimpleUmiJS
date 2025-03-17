@@ -4,6 +4,7 @@ import {
   getInterestRateByLoanProductId,
 } from '@/services/interestRate/interestRate';
 import { InterestRate } from '@/types/InterestRate';
+import { getErrorData } from '@/utils/error';
 import { Effect, Reducer } from '@umijs/max';
 
 export interface InterestRateState {
@@ -63,22 +64,22 @@ const useInterestRate: InterestRateModel = {
       }
     },
 
-    *createNewInterestRate({ payload }, { call, put }) {
-      console.log('first');
+    *createNewInterestRate({ payload, callback }, { call, put }) {
       try {
         const response: APIResponseInterestRate = yield call(
           createInterestRate,
           payload.data,
         );
-        if (payload.updateCallback) {
-          payload.updateCallback();
-        }
-        console.log('Thêm mới lãi xuất thành công');
-      } catch (error) {
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
         if (error instanceof Error) {
-          payload.callback('Error: ' + error.message);
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
         } else {
-          payload.callback('Lỗi không xác định. Vui lòng thử lại!');
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
         }
       }
     },

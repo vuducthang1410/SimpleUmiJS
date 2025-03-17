@@ -1,6 +1,7 @@
 import { getInfoCustomer, login } from "@/services/auth/auth";
 import { DataToken } from "@/types/DataToken";
 import { User } from "@/types/User";
+import { getErrorData } from "@/utils/error";
 import { Effect, Reducer } from "@umijs/max";
 import { jwtDecode } from "jwt-decode";
 
@@ -58,7 +59,7 @@ const useAuth: AuthModel = {
                 ...state,
                 user: {
                     ...state.user,
-                    cifCode:action.payload.cifCode,
+                    cifCode: action.payload.cifCode,
                     name: action.payload.name,
                     role: action.payload.role,
                     token: action.payload.token,
@@ -93,7 +94,7 @@ const useAuth: AuthModel = {
     effects: {
         *getInfoUser(): Generator<any, void, any> {
         },
-        *login({ payload }, { call, put, select }): Generator<any, void, any> {
+        *login({ payload, callback }, { call, put, select }): Generator<any, void, any> {
             yield put({ type: 'setLoading', payload: true })
             try {
                 const response = yield call(login, payload.dataLogin)
@@ -112,8 +113,17 @@ const useAuth: AuthModel = {
                 yield put({ type: 'setLoading', payload: false })
                 const data = yield select((state: RootState) => state.auth)
                 localStorage.setItem('user', JSON.stringify(data.user))
-            } catch (error) {
-                console.log(error)
+                callback({ isSuccess: true, message: response.message })
+            } catch (error: any) {
+                if (error instanceof Error) {
+                    const errorData = getErrorData(error.message)
+                    Array.isArray(errorData?.data) ?
+                        callback({ isSuccess: false, message: errorData?.data[0] }) :
+                        callback({ isSuccess: false, message: errorData?.data })
+                } else {
+                    console.log("🟡 Error is not an instance of Error, raw value:", error);
+                    callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+                }
             }
 
         },

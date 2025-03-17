@@ -1,40 +1,59 @@
-import { useEffect, useState } from 'react';
-import { Table } from 'antd';
-import { useDispatch,  useSelector } from '@umijs/max';
-import { API } from '@/types/financialInfo';
-import { PageContainer } from '@ant-design/pro-components';
+import ApprovedFInancialInfoModal from '@/components/Financial/ApprovedFinancialInfo';
 import { getFinancialInfoColumns } from '@/components/Financial/FinancialInfoColumns';
+import { API } from '@/types/financialInfo';
+import { DataCallback } from '@/types/InterestRate';
+import { PageContainer } from '@ant-design/pro-components';
+import { useDispatch, useSelector } from '@umijs/max';
+import { message, Table } from 'antd';
+import { useEffect, useState } from 'react';
 
 const FinancialInfo: React.FC = () => {
-    const {list,totalRecords,isLoading}=useSelector((state:any)=>state.financialInfoAdmin)
-    const dispatch=useDispatch();
-    useEffect(() => {
-        console.log("ccc")
-        dispatch({
-            type:'financialInfoAdmin/fetchList',
-            payload:{status:'PENDING'}
-        })
-    }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { list, totalRecords, isLoading } = useSelector(
+    (state: any) => state.financialInfoAdmin,
+  );
+  const [selectedRecord, setSelectedRecord] =
+    useState<API.FinancialInfoItem | null>(null);
 
-    useEffect(() => {
-        console.log('data cập nhật:', list);
-    }, [list]);
+  const handleDetail = (record: API.FinancialInfoItem) => {
+    setSelectedRecord(record);
+    setIsModalOpen(true);
+  };
 
-    const handleDetail = (record: API.FinancialInfoItem) => {
-        console.log('Chi tiết:', record);
-    };
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log('ccc');
+    dispatch({
+      type: 'financialInfoAdmin/fetchList',
+      payload: { status: 'PENDING' },
+      callback: (response: DataCallback) => {
+        if (!response.isSuccess) {
+          message.error(response.message);
+        }
+      },
+    });
+  }, []);
 
-    return (
-        <PageContainer>
-            <Table
-                columns={getFinancialInfoColumns(handleDetail)}
-                dataSource={list}
-                loading={isLoading}
-                rowKey={(record) => record.amountLoanLimit} 
-                pagination={{ total: totalRecords, pageSize: 12 }}
-            />
-        </PageContainer>
-    );
+  useEffect(() => {
+    console.log('data cập nhật:', list);
+  }, [list]);
+
+  return (
+    <PageContainer>
+      <Table
+        columns={getFinancialInfoColumns(handleDetail)}
+        dataSource={list}
+        loading={isLoading}
+        rowKey={(record) => record.amountLoanLimit}
+        pagination={{ total: totalRecords, pageSize: 12 }}
+      />
+      <ApprovedFInancialInfoModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        record={selectedRecord}
+      />
+    </PageContainer>
+  );
 };
 
 export default FinancialInfo;

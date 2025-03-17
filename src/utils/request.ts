@@ -16,7 +16,7 @@ const request = extend({
         ...options,
         headers: {
           ...options.headers,
-          Authorization: userData ? `Bearer ${userData.token}` : 'Bearer abc',
+          Authorization: userData ? `Bearer ${userData.token}` : '',
         },
       },
     };

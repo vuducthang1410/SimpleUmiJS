@@ -1,4 +1,5 @@
 import { approvedLoanInfo } from '@/services/loan/info';
+import { getErrorData } from '@/utils/error';
 import { Effect, Reducer } from '@umijs/max';
 
 export interface LoanDetailInfoCms {
@@ -34,7 +35,7 @@ const useLoanDetailInfo: LoanDetailInfoCmsModel = {
   },
 
   effects: {
-    *approvedLoanInfo({ payload }, { call, put }): Generator<any, void, any> {
+    *approvedLoanInfo({ payload, callback }, { call, put }): Generator<any, void, any> {
       yield put({ type: 'setLoading', payload: true });
       try {
         console.log('first', payload.loanInfoApproveRq);
@@ -44,10 +45,17 @@ const useLoanDetailInfo: LoanDetailInfoCmsModel = {
         );
         payload.cbLoadData();
         yield put({ type: 'setLoading', payload: false });
-        payload.cbPushNoti('Xét duyệt thành công!!', true);
-      } catch (error) {
-        payload.cbPushNoti(error.message, false);
-        yield put({ type: 'setLoading', payload: true });
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
       }
     },
   },

@@ -1,5 +1,6 @@
-import { fetchFinancialInfo, getInfoFinancialInfoByCifCode } from "@/services/financialInfo/financialInfo";
-import { API, FinancialDetail } from "@/types/financialInfo";
+import { approvedFinancialRequestRegister, fetchFinancialInfo, getInfoFinancialInfoByCifCode } from "@/services/financialInfo/financialInfo";
+import { API} from "@/types/financialInfo";
+import { getErrorData } from "@/utils/error";
 import { Effect, Reducer } from "@umijs/max";
 export interface FinancialInfoState {
   list: API.FinancialInfoItem[];
@@ -10,12 +11,12 @@ export interface FinancialInfoModel {
   namespace: 'financialInfoAdmin',
   state: FinancialInfoState
 
-  reducer: {
+  reducers: {
     setState: Reducer<FinancialInfoState>;
   },
   effects: {
     fetchList: Effect;
-    approvedFinancilRequest: Effect;
+    approvedFinancialRequest: Effect;
   }
 }
 const useFinancialInfo: FinancialInfoModel = {
@@ -23,29 +24,54 @@ const useFinancialInfo: FinancialInfoModel = {
   state: {
     list: [], totalRecords: 0, isLoading: false,
   },
-  reducer: {
+  reducers: {
     setState(state, action) {
-      return { ...state, list: action.listFinancialInfo, totalRecords: action.payload.totalRecords }
+      console.log(action.payload.listFinancialInfo)
+      return { ...state, list: action.payload.listFinancialInfo, totalRecords: action.payload.totalRecords }
     },
   },
   effects: {
-    *fetchList({ payload }, { call, put }): Generator<any, void, any> {
+    *fetchList({ payload, callback }, { call, put }): Generator<any, void, any> {
       try {
         console.log("bbbb")
         const response = yield call(fetchFinancialInfo, payload.status);
-        console.log('Dữ liệu trả về từ API:', response);
+        console.log('Dữ liệu trả về từ API:', response.data);
         yield put({
-          type: 'setList', payload: {
+          type: 'setState', payload: {
             listFinancialInfo: response.data.financialInfoRpList,
             totalRecords: response.data.totalRecords
           }
         })
-      } catch (error) {
-        console.error('Lỗi khi lấy danh sách tài chính:', error);
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
       }
     },
-    *approvedFinancilRequest({ payload }, { call, put }): Generator<any, void, any> {
-      console.log("first")
+    *approvedFinancialRequest({ payload, callback }, { call, put }): Generator<any, void, any> {
+      try {
+        const response = yield call(approvedFinancialRequestRegister, payload.data);
+        yield put({type:'fetchList',payload:{status:'PENDING'}})
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
+      }
+
     }
   }
 }

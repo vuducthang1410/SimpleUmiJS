@@ -15,3 +15,7 @@ export interface InterestRateRq {
   minimumAmount: number;
   minimumLoanTerm: number;
 }
+export interface DataCallback{
+  isSuccess:boolean,
+  message:string
+}

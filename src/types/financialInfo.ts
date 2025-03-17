@@ -9,6 +9,7 @@ export namespace API {
     countLegalDocument: number;
     isExpired: boolean;
     amountLoanLimit: number;
+    financialInfoId:string
   }
 
   export interface FinancialInfoListResponse {
@@ -46,9 +47,49 @@ export interface FinancialDetail {
   requestStatus?: string;
   balanceBankingAccount?: string;
   bankingAccountNumber?: string;
+  isExpired?:boolean;
+  applicableObjects?:string
+  expiredDate?:string
+  isRegistered?:boolean
 }
 export interface CustomerFinancialResponse {
   datadata: FinancialDetail;
   message: string;
   status: string;
+}
+export interface PieChartData {
+  key: string;
+  value: number;
+  realValue: number;
+}
+
+export interface ApiChartResponse {
+  data: PieChartData[];
+  message: string;
+  status: string;
+}
+
+export interface LegalDocument {
+  legalDocumentId: string;
+  description: string;
+  imageBase64: string;
+  documentType: string;
+  requestStatus: string;
+  expirationDate: string;
+}
+
+export interface FinancialInfoDetailRp {
+  customerId: string;
+  financialInfoId: string;
+  income: string;
+  unit: string;
+  creditScore: string;
+  incomeSource: string;
+  incomeType: string;
+  debtStatus: string;
+  isExpired: boolean;
+  requestStatus: string;
+  expiredDate: string;
+  amountLoanLimit: string;
+  legalDocumentRpList: LegalDocument[];
 }

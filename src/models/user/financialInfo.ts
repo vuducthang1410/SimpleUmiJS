@@ -1,5 +1,6 @@
-import { getDetailFinancialInfoByCifCode, getInfoFinancialInfoByCifCode } from '@/services/financialInfo/financialInfo';
+import { getDetailFinancialInfoByCifCode, getDetailStatisticalByCifCode, getInfoFinancialInfoByCifCode, registerFInancialInfo } from '@/services/financialInfo/financialInfo';
 import { API, FinancialDetail } from '@/types/financialInfo';
+import { getErrorData } from '@/utils/error';
 import { Effect, Reducer } from '@umijs/max';
 
 export interface FinacialInfo {
@@ -21,6 +22,8 @@ export interface FinancialInfoModel {
   effects: {
     getFinancialInfoByCifCode: Effect,
     fetchFinancialInfo: Effect;
+    registerFinnancialInfo: Effect,
+    getDetailStatisticalByCifCode: Effect
   };
 }
 
@@ -39,9 +42,9 @@ const useFinancialInfo: FinancialInfoModel = {
         ...state,
         fetchFinancialInfo: {
           ...state.fetchFinancialInfo,
-          financialInfoDetail: { 
-            ...state.fetchFinancialInfo.financialInfoDetail, // Tạo object mới để Redux nhận diện thay đổi
-            ...payload.financialInfo, // Gán toàn bộ dữ liệu từ API
+          financialInfoDetail: {
+            ...state.fetchFinancialInfo.financialInfoDetail,
+            ...payload.financialInfo,
           }
         }
       };
@@ -49,7 +52,7 @@ const useFinancialInfo: FinancialInfoModel = {
   },
   effects: {
     *getFinancialInfoByCifCode(
-      { payload },
+      { payload, callback },
       { call },
     ): Generator<any, void, any> {
       try {
@@ -59,21 +62,73 @@ const useFinancialInfo: FinancialInfoModel = {
         );
         console.log('heheh', response);
         payload.callback(response.data);
-      } catch (error) { }
+      } catch (error) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
+      }
     },
-    *fetchFinancialInfo({ payload }, { call, put,select }): Generator<any, void, any> {
+    *fetchFinancialInfo({ payload, callback }, { call, put, select }): Generator<any, void, any> {
       try {
         console.log("first")
         const response = yield call(getDetailFinancialInfoByCifCode, payload?.cifCode || '');
+        console.log(response)
         yield put({
           type: 'setFinancialInfo', payload: {
             financialInfo: response.data
           }
         })
-        const data=yield select((state:any)=>state.financialInfo)
-        console.log("rhhr",data)
-      } catch (error) {
-
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
+      }
+    }
+    ,
+    *registerFinnancialInfo({ payload, callback }, { call, put }): Generator<any, void, any> {
+      try {
+        const response = yield call(registerFInancialInfo, payload.formData);
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
+      }
+    },
+    *getDetailStatisticalByCifCode({payload,callback},{call}):Generator<any,void,any>{
+      try {
+        const response = yield call(getDetailStatisticalByCifCode, payload.cifCode);
+        payload.cbUpdate(response.data)
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
       }
     }
   },

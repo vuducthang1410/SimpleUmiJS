@@ -8,7 +8,8 @@ import {
   registerLoanInfo,
   repaymentLoanPeriodTermByPaymentScheduleId,
 } from '@/services/loan/info';
-import { LoanDetailActiveRp, PaymentScheduleRp } from '@/types/LoanInfo';
+import { LoanDetailActiveRp, LoanInfoHistory, PaymentScheduleRp } from '@/types/LoanInfo';
+import { getErrorData } from '@/utils/error';
 import { Effect, Reducer } from '@umijs/max';
 
 export interface LoanDetailInfo {
@@ -17,6 +18,8 @@ export interface LoanDetailInfo {
   paymentScheduleList: PaymentScheduleRp[];
   loanDetailInfoList: LoanDetailActiveRp[];
   totalRecord: number;
+  loanInfoHistory: LoanInfoHistory[]
+  filteredData: number
 }
 export interface RootState {
   fetchLoanDetailInfo: LoanDetailInfo;
@@ -34,6 +37,7 @@ export interface LoanDetailInfoModel {
     updateLoanAmountRemaingInList: Reducer;
     updateLoanDetailInfoListAfterRepaymentLoan: Reducer;
     setTotalRecord: Reducer;
+    setLoanInfoHistory: Reducer<RootState>;
   };
   effects: {
     registerLoanInfo: Effect;
@@ -62,10 +66,12 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
         loanTermName: 'N/A',
         loanTerm: 0,
         loanInfoId: '',
+
       },
       paymentScheduleList: [],
       loanDetailInfoList: [],
       totalRecord: 0,
+      loanInfoHistory: [], filteredData: 0
     },
   },
   reducers: {
@@ -155,51 +161,79 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
         },
       };
     },
+    setLoanInfoHistory(state, { payload }) {
+      return {
+        ...state, fetchLoanDetailInfo: {
+          ...state.fetchLoanDetailInfo,
+          loanInfoHistory: payload.loanInfoHistory,
+          filteredData: payload.loanInfoHistory.length
+        }
+      }
+    }
   },
 
   effects: {
     *registerLoanInfo(
-      { payload },
+      { payload, callback },
       { call, put, select },
     ): Generator<any, void, any> {
       try {
         yield put({ type: 'setLoading', payload: true });
         const response = yield call(registerLoanInfo, payload.loanDetailInfo);
-        payload.callbackPushNoti(response.message, true);
-      } catch (error) {
+        callback({ isSuccess: true, message: response.message })
+      } catch (error: any) {
         if (error instanceof Error) {
-          payload.callbackPushNoti(error.message, true);
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
         }
-      } finally {
+      }
+      finally {
         yield put({ type: 'setLoading', payload: false });
         payload.callbackSetStatusModal(false);
       }
     },
     *getLoanInfoHistoryByCifCode(
       { payload, callback },
-      { call },
+      { call, put, select },
     ): Generator<any, void, any> {
+      yield put({ type: 'setLoading', payload: true });
       try {
         const response = yield call(
           getLoanInfoHistoryByCifCode,
           payload.loanInfoHistoryRq,
         );
-        if (response && response.data) {
-          callback(
-            response.data.loanDetailInfoRpList,
-            response.data.totalRecord,
-          );
+        yield put({
+          type: 'setLoanInfoHistory', payload: {
+            loanInfoHistory: response.data.loanDetailInfoRpList
+          }
+        })
+        yield put({ type: 'setLoading', payload: false });
+        callback({ isSuccess: true, message: "" })
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
         } else {
-          callback([]);
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
         }
-      } catch (error) {
-        console.log(error);
+        yield put({ type: 'setLoading', payload: false });
       }
     },
     *getLoanInfoActiveByCifCode(
       { payload, callback },
-      { call, put },
-    ): Generator<any, void, any> {
+      { call, put ,select},
+    ): Generator<any, void, any> { 
+      // yield put({ type: 'setLoading', payload: true });
+      const data=yield select((state:any)=>state.loanDetailInfo)
+      console.log(data)
       try {
         const response = yield call(
           getLoanInfoActiveByCifCode,
@@ -216,11 +250,24 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
             type: 'setTotalRecord',
             payload: response.data.totalRecord,
           });
-          if (callback) callback();
         }
-      } catch (error) {
-        if (callback) callback();
-        console.log(error);
+        callback({ isSuccess: true, message: response.message })
+        const data1=yield select((state:any)=>state.loanDetailInfo)
+        console.log(data1)
+        yield put({ type: 'setLoading', payload: false });
+        const data2=yield select((state:any)=>state.loanDetailInfo)
+        console.log(data2)
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
+        yield put({ type: 'setLoading', payload: false });
       }
     },
     *getEarlyFeeRepaymentLoan(
@@ -241,6 +288,11 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
       { payload, callback },
       { call, put, select },
     ): Generator<any, void, any> {
+      const data=yield select((state:any)=>state.loanDetailInfo)
+      console.log(data)
+      yield put({ type: 'setLoading', payload: true });
+      const data1=yield select((state:any)=>state.loanDetailInfo)
+      console.log(data1)
       try {
         const response = yield call(earlyRepaymentLoan, payload.loanInfoId);
         yield put({
@@ -251,10 +303,26 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
             cifCode: payload.cifCode,
           },
         });
-        callback(null);
-      } catch (error) {
-        callback(error);
-        console.log(error);
+        callback({ isSuccess: true, message: response.message })
+        const data2=yield select((state:any)=>state.loanDetailInfo)
+        console.log(data2)
+        yield put({ type: 'setLoading', payload: false });
+        const data3=yield select((state:any)=>state.loanDetailInfo)
+        console.log(data3)
+        console.log("heheeh")
+      } catch (error: any) {
+        if (error instanceof Error) {
+          const errorData = getErrorData(error.message)
+          Array.isArray(errorData?.data) ?
+            callback({ isSuccess: false, message: errorData?.data[0] }) :
+            callback({ isSuccess: false, message: errorData?.data })
+        } else {
+          console.log("🟡 Error is not an instance of Error, raw value:", error);
+          callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+        }
+        yield put({ type: 'setLoading', payload: false });
+      } finally {
+        yield put({ type: 'setLoading', payload: false }); 
       }
     },
     *getPaymentScheduleByLoanDetailInfo(

@@ -1,37 +1,58 @@
 import { LoanProductRp } from '@/types/LoanProduct';
-import { history, useDispatch, useParams } from '@umijs/max';
-import { App, Button, Card, Descriptions, Table, Typography } from 'antd';
+import { useDispatch } from '@umijs/max';
+import { Button, Card, Descriptions, Drawer, message, Table, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import LoanRegistrationForm from '../Loan/RegisterFormModal';
-
+import { DataCallback } from '@/types/InterestRate';
 const { Title } = Typography;
 
-export default function LoanProductDetail() {
-  const { id } = useParams<{ id: string }>();
+interface LoanProductDetailProps {
+  open: boolean;
+  onClose: () => void;
+  loanProductId: string;
+}
+
+export default function LoanProductDetailDrawer({
+  open,
+  onClose,
+  loanProductId,
+}: LoanProductDetailProps) {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loanProductResponse, setLoanProductResponse] =
     useState<LoanProductRp | null>(null);
 
   useEffect(() => {
-    if (id) {
+    console.log("first")
+    if (loanProductId) {
+      console.log("first")
+      console.log(loanProductId)
       dispatch({
         type: 'loanProductForUser/getLoanProductById',
-        payload: { id: id, callback: setLoanProductResponse },
+        payload: { id: loanProductId, callback: setLoanProductResponse },
+        callback:(response:DataCallback)=>{
+            if(response.isSuccess){
+                message.success(response.message)
+            }else{
+                message.error(response.message)
+            }
+        }
       });
     }
-  }, [id]);
+  }, [loanProductId]);
 
   if (!loanProductResponse) {
     return <div>Loading...</div>;
   }
 
   return (
-    <App style={{ maxWidth: 800, margin: 'auto', padding: '20px' }}>
+    <Drawer
+      title="Chi tiết sản phẩm vay"
+      open={open}
+      onClose={onClose}
+      width={600}
+    >
       <Card>
-        <Button style={{ marginBottom: 15 }} onClick={() => history.back()}>
-          {'< Quay lại'}
-        </Button>
         <img
           src={loanProductResponse.imgUrl}
           alt={loanProductResponse.productName}
@@ -51,6 +72,18 @@ export default function LoanProductDetail() {
           </label>
           {loanProductResponse.productDescription}
         </p>
+        <p>
+          <label style={{ fontSize: 16, fontWeight: 500 }}>
+            {'Điều kiện vay: '}
+          </label>
+          {loanProductResponse.loanCondition}
+        </p>
+        <p>
+          <label style={{ fontSize: 16, fontWeight: 500 }}>
+            {'Tiện ích sản phẩm: '}
+          </label>
+          {loanProductResponse.utilities}
+        </p>
         <Descriptions title="Thông tin chi tiết" bordered column={1}>
           <Descriptions.Item label="Hình thức vay">
             {loanProductResponse.formLoan}
@@ -66,9 +99,7 @@ export default function LoanProductDetail() {
           </Descriptions.Item>
         </Descriptions>
 
-        <Title level={3} style={{ marginTop: 20 }}>
-          Lãi suất
-        </Title>
+        <Title level={4} style={{ marginTop: 20 }}>Lãi suất</Title>
         <Table
           dataSource={loanProductResponse.interestRate}
           rowKey="id"
@@ -100,6 +131,7 @@ export default function LoanProductDetail() {
             },
           ]}
         />
+
         <Button
           type="primary"
           style={{ width: '100%', height: '3em', marginTop: 15 }}
@@ -107,19 +139,18 @@ export default function LoanProductDetail() {
         >
           Đăng ký vay vốn
         </Button>
-        <div style={{ position: 'absolute' }}>
-          {isModalOpen == true && (
-            <LoanRegistrationForm
-              loanProductName={loanProductResponse.productName}
-              loanProductId=""
-              isModalOpen={isModalOpen}
-              setIsModalOpen={setIsModalOpen}
-              loanTermLimit={loanProductResponse.termLimit}
-              amountLoanLimit={loanProductResponse.loanLimit}
-            />
-          )}
-        </div>
+
+        {isModalOpen && (
+          <LoanRegistrationForm
+            loanProductName={loanProductResponse.productName}
+            loanProductId={loanProductId}
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            loanTermLimit={loanProductResponse.termLimit}
+            amountLoanLimit={loanProductResponse.loanLimit}
+          />
+        )}
       </Card>
-    </App>
+    </Drawer>
   );
 }

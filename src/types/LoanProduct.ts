@@ -28,6 +28,8 @@ export interface LoanProductRp {
   imgUrl: string;
   termLimit: number;
   createdDate: string;
+  loanCondition: string;
+  utilities:string;
   isActive: boolean;
   applicableObjects: string;
   interestRate: InterestRate[];

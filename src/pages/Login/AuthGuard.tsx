@@ -18,7 +18,7 @@ const AuthGuard: React.FC<{ children: JSX.Element }> = () => {
         type: 'auth/setUserDataWhenReload',
         payload: {
           user: userLocal,
-        },
+        }
       });
   }, []);
 
