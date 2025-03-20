@@ -27,3 +27,18 @@ export interface ApiCustomerInfoResponse {
   message: string;
   result: CustomerInfo;
 }
+export interface RegisterDataForm {
+  phone?: string;
+  password?: string;
+  firstname?: string;
+  lastname?: string;
+  gender?: string;
+  mail?: string;
+  address?: string;
+  placeOrigin?: string;
+  identityCard?: string;
+  dob?: string;
+  identityCardFront?: File;
+  identityCardBack?: File;
+  avatar?: File;
+}

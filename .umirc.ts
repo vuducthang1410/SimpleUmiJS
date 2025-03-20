@@ -74,13 +74,11 @@ export default defineConfig({
       wrappers: ['@/pages/Login/AuthGuard'],
       access: 'isUser',
     },
-    // {
-    //   path: '/loan-product/:id',
-    //   component: '@/pages/User/LoanProduct/LoanProductDetail',
-    //   wrappers: ['@/pages/Login/AuthGuard'],
-    //   access: 'isUser',
-    // },
-
+    {
+      path: '/register',
+      component: '@/pages/Register',
+      layout:false
+    },
     {
       name: 'Đăng xuất',
       path: '/logout',

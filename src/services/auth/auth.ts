@@ -1,8 +1,8 @@
 import { DataLogin, DataLoginResponse } from "@/types/DataToken";
-import { ApiCustomerInfoResponse } from "@/types/User";
+import { ApiCustomerInfoResponse, RegisterDataForm } from "@/types/User";
 import { handleApiError } from "@/utils/error";
 import APIConfig from "@/utils/URL"
-import { AxiosError, request } from "@umijs/max";
+import {request } from "@umijs/max";
 
 export async function login(dataLogin: DataLogin) {
   try {
@@ -32,6 +32,22 @@ export async function getInfoCustomer(token: string) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
+      }
+    )
+  } catch (error) {
+    await handleApiError(error)
+  }
+}
+export async function registerInfoCustomer(regsterInfoData:FormData) {
+  try {
+    return request<ApiCustomerInfoResponse>(
+      APIConfig.CUSTOMER_URL + '/users/create',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data:regsterInfoData
       }
     )
   } catch (error) {
