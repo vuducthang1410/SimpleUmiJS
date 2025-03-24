@@ -1,10 +1,21 @@
 import { DataCallback } from '@/types/InterestRate';
 import { LoanProductForUserRp } from '@/types/LoanProduct';
 import { useDispatch, useSelector } from '@umijs/max';
-import { App, Button, Card, List, message, Spin, Tag, Typography } from 'antd';
+import {
+  App,
+  Button,
+  Card,
+  List,
+  message,
+  Select,
+  Spin,
+  Tag,
+  Typography,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import LoanRegistrationForm from '../Loan/RegisterFormModal';
 import LoanProductDetailDrawer from './LoanProductDetail';
+const { Option } = Select;
 const LoanListActive: React.FC = () => {
   const dispatch = useDispatch();
   const { loanProductList, loading } = useSelector(
@@ -22,10 +33,23 @@ const LoanListActive: React.FC = () => {
     setIsDrawerOpen(true);
   };
   const [openModalId, setOpenModalId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [currentPage, setCurrentPage] = useState(1);
+  const checkFinancialIsValid = () =>
+    financialInfoDetail &&
+    Object.keys(financialInfoDetail).length > 0 &&
+    financialInfoDetail.financialInfoId;
+  const handleFilterChange = (value: string) => {
+    setStatusFilter(value);
+    setCurrentPage(1);
+  };
+  const pushNotiWarnResgisterFinancial = () => {
+    message.warning('Vui lòng đăng ký thông tin tài chính để tiếp tục');
+  };
   useEffect(() => {
     dispatch({
       type: 'loanProductForUser/fetchLoanProducts',
-      payload: { pageNumber: 0, pageSize: 10 },
+      payload: { pageNumber: 0, pageSize: 10, applicableObject: statusFilter },
       callback: (response: DataCallback) => {
         if (response.isSuccess) {
           message.success(response.message);
@@ -34,15 +58,8 @@ const LoanListActive: React.FC = () => {
         }
       },
     });
-  }, [dispatch]);
-  const checkFinancialIsValid = () =>
-    financialInfoDetail &&
-    Object.keys(financialInfoDetail).length > 0 &&
-    financialInfoDetail.financialInfoId;
+  }, [statusFilter]);
 
-  const pushNotiWarnResgisterFinancial = () => {
-    message.warning('Vui lòng đăng ký thông tin tài chính để tiếp tục');
-  };
   useEffect(() => {
     console.log('data', loanProductList);
   }, [loanProductList]);
@@ -50,6 +67,19 @@ const LoanListActive: React.FC = () => {
   return (
     <App>
       <Spin spinning={loading}>
+        {' '}
+        {/* Bộ lọc trạng thái */}
+        <div className="filter-container" style={{ marginBottom: 10 }}>
+          <Select
+            value={statusFilter}
+            onChange={handleFilterChange}
+            style={{ width: 200 }}
+          >
+            <Option value="ALL">Tất cả sản phẩm</Option>
+            <Option value="BUSINESS_CUSTOMER">Dành cho doanh nghiệp</Option>
+            <Option value="INDIVIDUAL_CUSTOMER">Dành cho cá nhân</Option>
+          </Select>
+        </div>
         <List
           grid={{
             gutter: 16,
@@ -81,6 +111,9 @@ const LoanListActive: React.FC = () => {
                   <strong>Lãi suất:</strong>{' '}
                   <Tag color="green">{item.minInterestRate}%</Tag> -{' '}
                   <Tag color="red">{item.maxInterestRate}%</Tag>
+                </p>
+                <p>
+                  <strong>Đối tượng áp dụng:</strong> {item.applicableObject}
                 </p>
                 <p>
                   <strong>Số tiền vay tối đa:</strong>{' '}

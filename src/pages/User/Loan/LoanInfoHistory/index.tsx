@@ -119,7 +119,7 @@ const LoanHistory: React.FC = () => {
                   <h3 className="loan-title">{loan.loanProductName}</h3>
                   <p>
                     <strong>💰 Số tiền:</strong>{' '}
-                    {loan.loanAmount.toLocaleString()} VND
+                    {loan.loanAmount.toLocaleString()}
                   </p>
                   <p>
                     <strong>📈 Lãi suất:</strong> {loan.interestRate}%

@@ -1,5 +1,6 @@
 import { PieChartData } from '@/types/financialInfo';
 import { DataCallback } from '@/types/InterestRate';
+import { getUserInfoInLocalStorage } from '@/utils/UserInfo';
 import { Pie, PieConfig } from '@ant-design/plots';
 import { useDispatch } from '@umijs/max';
 import { Card, message, Spin, Typography } from 'antd';
@@ -13,10 +14,11 @@ const LoanPieChart: React.FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const loadData = async () => {
+      const user = getUserInfoInLocalStorage();
       dispatch({
         type: 'financialInfo/getDetailStatisticalByCifCode',
         payload: {
-          cifCode: '13031133871',
+          cifCode: user?.cifCode,
           cbUpdate: setData,
         },
         callback: (response: DataCallback) => {
@@ -24,12 +26,12 @@ const LoanPieChart: React.FC = () => {
         },
       });
     };
-    setLoading(false)
+    setLoading(false);
     loadData();
   }, []);
-  useEffect(()=>{
-    console.log(data)
-  },[data])
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   const config: PieConfig = {
     data,
     angleField: 'value',

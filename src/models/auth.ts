@@ -98,7 +98,7 @@ const useAuth: AuthModel = {
             yield put({ type: 'setLoading', payload: true })
             try {
                 const response = yield call(login, payload.dataLogin)
-                const accessToken = response.result.access_token
+                const accessToken = response.data.access_token
                 const dataToken = jwtDecode<Partial<DataToken>>(accessToken)
                 const responseGetCustomerInfo = yield call(getInfoCustomer, accessToken)
                 yield put({
@@ -107,7 +107,7 @@ const useAuth: AuthModel = {
                         name: dataToken.name,
                         role: dataToken.realm_access?.roles[0],
                         token: accessToken,
-                        cifCode: responseGetCustomerInfo.result.cifCode
+                        cifCode: responseGetCustomerInfo.data.cifCode
                     }
                 })
                 yield put({ type: 'setLoading', payload: false })

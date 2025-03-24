@@ -29,7 +29,7 @@ export interface LoanProductRp {
   termLimit: number;
   createdDate: string;
   loanCondition: string;
-  utilities:string;
+  utilities: string;
   isActive: boolean;
   applicableObjects: string;
   interestRate: InterestRate[];
@@ -42,6 +42,7 @@ export interface LoanProductForUserRp {
   maxInterestRate: number;
   maxLoanAmount: string;
   maxLoanTerm: number;
+  applicableObject: string
 }
 export interface APIResponseLoanProduct {
   data: LoanProductRp;

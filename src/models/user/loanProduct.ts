@@ -1,5 +1,6 @@
-import getLoanProductForUser, {
+import {
   getListLoanProductForUser,
+  getLoanProductForUser,
 } from '@/services/LoanProduct/loanProduct';
 import { LoanProductForUserRp } from '@/types/LoanProduct';
 import { getErrorData } from '@/utils/error';
@@ -67,6 +68,7 @@ const useLoanProduct: LoanProductModel = {
           getListLoanProductForUser,
           payload.pageSize,
           payload.pageNum,
+          payload.applicableObject
         );
         console.log('reponse', response);
         if (response?.data) {

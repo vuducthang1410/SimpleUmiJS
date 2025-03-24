@@ -4,83 +4,102 @@ import {
   APIResponseLoanProduct,
   LoanProduct,
 } from '@/types/LoanProduct';
+import { handleApiError } from '@/utils/error';
 import request from '@/utils/request';
 import generateTransactionId from '@/utils/Transaction';
 import APIConfig from '@/utils/URL';
-import { AxiosError} from '@umijs/max';
 export async function fetchLoanProducts(
   active: boolean,
   pageNumber = 0,
   pageSize = 12,
 ) {
-  return request<APIResponseListLoanProduct>(
-    APIConfig.LOAN_URL + '/loan-product/get-all-by-active',
-    {
-      method: 'GET',
-      params: { active, pageNumber, pageSize },
-      headers: { transactionId: generateTransactionId() },
-    },
-  );
+  try {
+    return request<APIResponseListLoanProduct>(
+      APIConfig.LOAN_URL + '/loan-product/get-all-by-active',
+      {
+        method: 'GET',
+        params: { active, pageNumber, pageSize },
+        headers: { transactionId: generateTransactionId() },
+      },
+    );
+  } catch (error) {
+    await handleApiError(error);
+  }
+
 }
 export async function createLoanProduct(loanProduct: LoanProduct) {
-  return request<APIResponseListLoanProduct>(APIConfig.LOAN_URL + '/loan-product/save', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      transactionId: generateTransactionId(),
-    },
-    data: loanProduct,
-  });
+  try {
+    return request<APIResponseListLoanProduct>(APIConfig.LOAN_URL + '/loan-product/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        transactionId: generateTransactionId(),
+      },
+      data: loanProduct,
+    });
+  } catch (error) {
+    await handleApiError(error);
+  }
+
 }
 export async function deleteLoanProduct(id: string) {
-  return request(APIConfig.LOAN_URL + `/loan-product/delete/${id}`, {
-    method: 'DELETE',
-    headers: {
-      accept: '*/*',
-      transactionId: generateTransactionId(),
-    },
-  });
+  try {
+    return request(APIConfig.LOAN_URL + `/loan-product/delete/${id}`, {
+      method: 'DELETE',
+      headers: {
+        accept: '*/*',
+        transactionId: generateTransactionId(),
+      },
+    });
+  } catch (error) {
+    await handleApiError(error);
+  }
+
 }
 export async function getDetailLoanProduct(id: string) {
-  return request<APIResponseLoanProduct>(APIConfig.LOAN_URL + `/loan-product/${id}`, {
-    method: 'GET',
-    headers: { transactionId: generateTransactionId() },
-  });
+  try {
+    return request<APIResponseLoanProduct>(APIConfig.LOAN_URL + `/loan-product/${id}`, {
+      method: 'GET',
+      headers: { transactionId: generateTransactionId() },
+    });
+  } catch (error) {
+    await handleApiError(error);
+  }
+
 }
 export async function activedLoanProductApi(id: string) {
-  return request(APIConfig.LOAN_URL + `/loan-product/active/${id}`, {
-    method: 'PATCH',
-    headers: {
-      accept: '*/*',
-      transactionId: generateTransactionId(),
-    },
-  });
+  try {
+    return request(APIConfig.LOAN_URL + `/loan-product/active/${id}`, {
+      method: 'PATCH',
+      headers: {
+        accept: '*/*',
+        transactionId: generateTransactionId(),
+      },
+    });
+  } catch (error) {
+    await handleApiError(error);
+  }
+
 }
-export async function getListLoanProductForUser(pageSize = 12, pageNum = 0) {
+export async function getListLoanProductForUser(pageSize = 12, pageNum = 0, applicableObject: string) {
   try {
     return await request<APIResponseListLoanProductForUser>(
-      APIConfig.LOAN_URL + '/loan-product/get-all-loan-product-active',
+      APIConfig.LOAN_URL + '/loan-product/get-all-loan-product-active-and-applicable-object',
       {
         method: 'GET',
         headers: {
           accept: '*/*',
           transactionId: generateTransactionId(),
         },
-        params: { pageNum, pageSize },
+        params: { pageNum, pageSize, applicableObject },
       },
     );
   } catch (error) {
-    const axiosError = error as AxiosError;
-    const errorMessage =
-      axiosError.response?.data?.data ||
-      axiosError.message ||
-      'Có lỗi xảy ra khi tạo lãi suất';
-
-    throw new Error(errorMessage);
+    await handleApiError(error);
   }
 }
 
-export default function getLoanProductForUser(id: string) {
+export async function getLoanProductForUser(id: string) {
   try {
     return request<APIResponseLoanProduct>(
       APIConfig.LOAN_URL + `/loan-product/loan-product-detail/${id}`,
@@ -90,12 +109,7 @@ export default function getLoanProductForUser(id: string) {
       },
     );
   } catch (error) {
-    const axiosError = error as AxiosError;
-    const errorMessage =
-      axiosError.response?.data?.data ||
-      axiosError.message ||
-      'Có lỗi xảy ra khi tạo lãi suất';
-    throw new Error(errorMessage);
+    await handleApiError(error);
   }
 }
 // Định nghĩa kiểu dữ liệu trả về từ API
