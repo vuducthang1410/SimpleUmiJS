@@ -1,0 +1,7 @@
+.g2-legend-list {
+  display: flex !important;
+  flex-direction: column !important; /* Đảm bảo xuống hàng */
+  align-items: flex-start !important;
+  gap: 6px; /* Khoảng cách giữa các dòng */
+  width: auto !important;
+}

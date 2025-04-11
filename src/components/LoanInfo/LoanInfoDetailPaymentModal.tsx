@@ -181,6 +181,7 @@ const LoanInfoDetailPaymentModal: React.FC<LoanDetailModalProps> = ({
             columns={columns}
             rowKey="paymentScheduleId"
             pagination={false}
+            style={{ overflowX: 'scroll' }}
           />
         </>
       )}

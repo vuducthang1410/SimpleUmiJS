@@ -1,7 +1,7 @@
 import { PieChartData } from '@/types/financialInfo';
 import { DataCallback } from '@/types/InterestRate';
 import { getUserInfoInLocalStorage } from '@/utils/UserInfo';
-import { Pie, PieConfig } from '@ant-design/plots';
+import { Pie } from '@ant-design/plots';
 import { useDispatch } from '@umijs/max';
 import { Card, message, Spin, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -32,20 +32,23 @@ const LoanPieChart: React.FC = () => {
   useEffect(() => {
     console.log(data);
   }, [data]);
-  const config: PieConfig = {
+  const config = {
     data,
     angleField: 'value',
     colorField: 'key',
-    radius: 0.6,
+    radios:1,
     label: {
-      text: (d: PieChartData) =>
-        `${d.key}\n${d.value.toFixed(2)}% (${d.realValue})`,
-      position: 'spider',
+      text: 'value',
+      style: {
+        fontWeight: 'bold',
+        fontSize:10 
+      },
     },
     legend: {
       color: {
         title: false,
-        position: 'right',
+        position: 'top',
+        layout: 'vertical', 
         rowPadding: 5,
       },
     },

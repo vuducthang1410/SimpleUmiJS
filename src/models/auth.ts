@@ -1,4 +1,4 @@
-import { getInfoCustomer, login } from "@/services/auth/auth";
+import { getInfoCustomer, login, verifyAccount } from "@/services/auth/auth";
 import { DataToken } from "@/types/DataToken";
 import { User } from "@/types/User";
 import { getErrorData } from "@/utils/error";
@@ -26,6 +26,7 @@ export interface AuthModel {
         login: Effect;
         logout: Effect;
         getInfoUser: Effect;
+        verifyAccount: Effect;
     }
 }
 const useAuth: AuthModel = {
@@ -67,7 +68,7 @@ const useAuth: AuthModel = {
                 }
             };
         },
-        logOut(state, action) {
+        logOut(state) {
             return {
                 ...state, user: {
                     ...state.user,
@@ -77,7 +78,6 @@ const useAuth: AuthModel = {
             }
         },
         setUserDataWhenReload(state, action) {
-            console.log(action)
             return {
                 ...state,
                 user: {
@@ -124,6 +124,7 @@ const useAuth: AuthModel = {
                     console.log("🟡 Error is not an instance of Error, raw value:", error);
                     callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
                 }
+                yield put({ type: 'setLoading', payload: false })
             }
 
         },
@@ -134,6 +135,26 @@ const useAuth: AuthModel = {
                 yield put({ type: 'logOut' });
                 localStorage.removeItem("user");
             }
+        },
+        *verifyAccount({ payload, callback }, { call, put }): Generator<any, void, any> {
+            yield put({ type: 'setLoading', payload: true })
+            try {
+                const response = yield call(verifyAccount, payload.code, payload.mail)
+                callback({ isSuccess: true, message: response.message })
+            } catch (error: any) {
+                if (error instanceof Error) {
+                    const errorData = getErrorData(error.message)
+                    Array.isArray(errorData?.data) ?
+                        callback({ isSuccess: false, message: errorData?.data[0] }) :
+                        callback({ isSuccess: false, message: errorData?.data })
+                } else {
+                    console.log("🟡 Error is not an instance of Error, raw value:", error);
+                    callback({ isSuccess: false, message: "Lỗi không xác định. Vui lòng thử lại!" });
+                }
+            } finally {
+                yield put({ type: 'setLoading', payload: false })
+            }
+
         },
     }
 }

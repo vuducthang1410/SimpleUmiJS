@@ -97,6 +97,7 @@ export interface LoanDataRp {
     interestCurrentPeriod: number;
     amountNeedPayment: number;
     amountFined: string;
+    amountFinedNotYetPaid:string
 }
 export interface EarlyFeeRepaymentLoanResponse {
     data: LoanDataRp;

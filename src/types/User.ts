@@ -25,7 +25,7 @@ export interface CustomerInfo {
 export interface ApiCustomerInfoResponse {
   code: number;
   message: string;
-  result: CustomerInfo;
+  data: CustomerInfo;
 }
 export interface RegisterDataForm {
   phone?: string;
@@ -41,4 +41,25 @@ export interface RegisterDataForm {
   identityCardFront?: File;
   identityCardBack?: File;
   avatar?: File;
+}
+export interface Province{
+     number: number
+      name: string
+}
+export interface ApiProvinceResponse {
+  code: number;
+  message: string;
+  data: Province[];
+}
+export interface AccountData {
+  accountId?: string;
+  accountNumber?: string;
+  accountName?: string;
+  accountType?: string;
+}
+
+export interface ApiResponse<T> {
+  code: number;
+  message: string;
+  data: T;
 }

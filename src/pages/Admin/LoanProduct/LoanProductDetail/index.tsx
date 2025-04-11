@@ -33,7 +33,7 @@ const LoanProductDetail = () => {
       payload: { id, callback: setLoanProductRp },
       callback: (response: DataCallback) => {
         if (response.isSuccess) {
-          message.success(response.message);
+          // message.success(response.message);
         } else {
           message.error(response.message);
         }
@@ -89,6 +89,7 @@ const LoanProductDetail = () => {
           id={id}
           dispatch={dispatch}
           setEditingRate={setEditingRate}
+          loadData={loadData}
         />
         <EditInterestRateModal
           isOpen={isModalUpdateOpen}

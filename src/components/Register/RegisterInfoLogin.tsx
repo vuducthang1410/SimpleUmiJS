@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './RegisterInfoLogin.module.css';
 import { useSelector } from '@umijs/max';
 import { RegisterDataForm } from '@/types/User';
@@ -10,7 +10,6 @@ interface RegisterInfoProps{
   setRegisterInfo: (info: RegisterDataForm) => void;
 }
 const RegisterInfoLogin: React.FC<RegisterInfoProps> = ({ registerInfo,setRegisterInfo }) => {
-  const { userRegister } = useSelector((state: any) => state.user);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRegisterInfo({ ...registerInfo, [e.target.name]: e.target.value });
   };
@@ -18,15 +17,15 @@ const RegisterInfoLogin: React.FC<RegisterInfoProps> = ({ registerInfo,setRegist
   return (
     <div className={styles.container}>
       <div className={styles.form}>
-        <div className={styles.label}>
-            Đăng ký thông tin đăng nhập 
+        <div className={styles.label} style={{margin:10}}>
+            Thông tin đăng nhập 
         </div>
         <div className={styles.inputGroup}>
           <label className={styles.label}>Số điện thoại</label>
           <Input
             name="phone"
             placeholder="Nhập số điện thoại"
-            value={userRegister.phone}
+            value={registerInfo?.phone || ""}
             onChange={handleChange}
             className={styles.input}
             prefix={<UserOutlined className={styles.icon} />}
@@ -38,7 +37,7 @@ const RegisterInfoLogin: React.FC<RegisterInfoProps> = ({ registerInfo,setRegist
           <Input.Password
             name="password"
             placeholder="Nhập mật khẩu"
-            value={userRegister.password}
+            value={registerInfo?.password||''}
             onChange={handleChange}
             className={styles.input}
             prefix={<LockOutlined className={styles.icon} />}

@@ -8,6 +8,7 @@ interface CreateInterestRateModalProps {
   id: string;
   dispatch: any;
   setEditingRate: React.Dispatch<React.SetStateAction<InterestRateRq>>;
+  loadData: any;
 }
 
 const CreateInterestRateModal: React.FC<CreateInterestRateModalProps> = ({
@@ -16,6 +17,7 @@ const CreateInterestRateModal: React.FC<CreateInterestRateModalProps> = ({
   id,
   dispatch,
   setEditingRate,
+  loadData,
 }) => {
   const handleCreate = () => {
     setEditingRate((prev: InterestRateRq) => {
@@ -25,13 +27,14 @@ const CreateInterestRateModal: React.FC<CreateInterestRateModalProps> = ({
         payload: {
           data: updatedRate,
         },
-        callback:(response:DataCallback)=>{
-            if(response.isSuccess){
-                message.success(response.message)
-            }else{
-                message.error(response.message)
-            }
-        }
+        callback: (response: DataCallback) => {
+          if (response.isSuccess) {
+            message.success(response.message);
+            loadData(id);
+          } else {
+            message.error(response.message);
+          }
+        },
       });
       return updatedRate;
     });

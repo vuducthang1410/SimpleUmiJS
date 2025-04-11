@@ -1,87 +1,86 @@
 /* Chủ đề màu sắc */
 :root {
-    --primary-color: #ff8e2e;
-    --secondary-color: #6c757d;
-    --background-color: #f8f9fa;
-    --card-background: #ffffff;
-    --text-color: #333;
-    --border-radius: 10px;
-  }
-  
-  /* Container chính */
-  .register-info-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  /* Card đăng ký */
-  .register-info-card {
-    width: 450px;
-    text-align: center;
-  }
-  
-  /* Tiêu đề */
-  .form-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-  }
-  
-  /* Hàng input */
-  .form-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .form-item {
-    flex: 1;
-    text-align: left;
-  }
-  
-  /* Nhãn */
-  .form-item label {
-    font-weight: 500;
-    color: var(--secondary-color);
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  /* Input */
-  .ant-input,
-  .ant-select-selector {
-    width: 100%;
-    padding: 10px;
-    border-radius: var(--border-radius);
-    border: 1px solid #ddd;
-    transition: 0.3s;
-  }
-  
-  .ant-input:focus,
-  .ant-select-selector:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 5px rgba(255, 142, 46, 0.5);
-  }
-  
-  /* Nút đăng ký */
-  .register-button {
-    width: 100%;
-    background-color: var(--primary-color);
-    border: none;
-    color: white;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: var(--border-radius);
-    margin-top: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .register-button:hover {
-    background-color: #e67e22;
-  }
-  
+  --primary-color: #ff8e2e;
+  --secondary-color: #6c757d;
+  --background-color: #f8f9fa;
+  --card-background: #ffffff;
+  --text-color: #333;
+  --border-radius: 10px;
+}
+
+/* Container chính */
+.register-info-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}
+
+/* Card đăng ký */
+.register-info-card {
+  max-width: 450px;
+  text-align: center;
+}
+
+/* Tiêu đề */
+.form-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+/* Hàng input */
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-item {
+  flex: 1;
+  text-align: left;
+}
+
+/* Nhãn */
+.form-item label {
+  font-weight: 500;
+  color: var(--secondary-color);
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Input */
+.ant-input,
+.ant-select-selector {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  border: 1px solid #ddd;
+  transition: 0.3s;
+}
+
+.ant-input:focus,
+.ant-select-selector:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(255, 142, 46, 0.5);
+}
+
+/* Nút đăng ký */
+.register-button {
+  width: 100%;
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: var(--border-radius);
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.register-button:hover {
+  background-color: #e67e22;
+}

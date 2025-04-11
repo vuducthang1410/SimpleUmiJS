@@ -9,6 +9,7 @@ export default defineConfig({
   request: {},
   layout: {
     title: 'KLB-Banking',
+    contentStyle: { paddingBlock: 0 },
   },
   routes: [
     {
@@ -76,35 +77,20 @@ export default defineConfig({
     },
     {
       name: 'Giao dịch',
-      path: '/transaction',
-      routes: [
-        {
-          name: 'Giao dịch nội bộ',
-          path: 'internal-transaction',
-          component: '@/pages/Transaction/InternalTransactionPage',
-          wrappers: ['@/pages/Login/AuthGuard'],
-          access: 'isUser',
-        },
-        {
-          name: 'Giao dịch liên ngân hàng',
-          path: 'external-transaction',
-          component: '@/pages/Transaction/ExternalTransactionPage',
-          wrappers: ['@/pages/Login/AuthGuard'],
-          access: 'isUser',
-        },
-        {
-          name: 'Lịch sử giao dịch',
-          path: 'history-transaction',
-          component: '@/pages/Transaction/HistoryTransactionPage',
-          wrappers: ['@/pages/Login/AuthGuard'],
-          access: 'isUser',
-        }
-      ]
+      path: '/transaction/internal-transaction',
+      component: '@/pages/Transaction/InternalTransactionPage',
+      wrappers: ['@/pages/Login/AuthGuard'],
+      access: 'isUser'
     }
     ,
     {
       path: '/register',
       component: '@/pages/Register',
+      layout: false
+    },
+    {
+      path: '/AccountVerification',
+      component: '@/pages/Register/VerifyAccountPage.tsx',
       layout: false
     },
     {

@@ -15,6 +15,7 @@ export default function useLoanProductForm() {
   });
 
   const handleInputChange = (field: keyof LoanProduct, value: any) => {
+    console.log("first",value)
     setNewLoanProduct((prev) => ({ ...prev, [field]: value }));
   };
 

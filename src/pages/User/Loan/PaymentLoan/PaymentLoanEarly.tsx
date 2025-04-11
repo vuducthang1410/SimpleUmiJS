@@ -116,7 +116,13 @@ const LoanDetailModal: React.FC<LoanDetailModalProps> = ({
             >
               {loanData.interestCurrentPeriod}
             </Descriptions.Item>
-            <Descriptions.Item key="amountFined" label="Tiền phạt">
+            <Descriptions.Item
+              key="amountFinedNotYetPaid"
+              label="Tiền phạt chưa thanh toán"
+            >
+              {loanData.amountFinedNotYetPaid}
+            </Descriptions.Item>
+            <Descriptions.Item key="amountFined" label="Tiền phạt thanh toán trước hạn">
               {loanData.amountFined}
             </Descriptions.Item>
             <Descriptions.Item

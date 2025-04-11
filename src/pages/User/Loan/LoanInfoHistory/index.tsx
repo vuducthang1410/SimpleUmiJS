@@ -2,18 +2,8 @@ import LoanStatusTag from '@/components/LoanInfo/LoanStatusTag';
 import { DataCallback } from '@/types/InterestRate';
 import { LoanInfoHistory, LoanInfoHistoryRq } from '@/types/LoanInfo';
 import { getUserInfoInLocalStorage } from '@/utils/UserInfo';
-import { history, useDispatch, useSelector } from '@umijs/max';
-import {
-  Button,
-  Card,
-  Col,
-  Empty,
-  message,
-  Pagination,
-  Row,
-  Select,
-  Spin,
-} from 'antd';
+import { useDispatch, useSelector } from '@umijs/max';
+import { Card, Col, Empty, message, Pagination, Row, Select, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import './LoanHistory.css';
 
@@ -67,17 +57,11 @@ const LoanHistory: React.FC = () => {
         return 'black'; // Màu mặc định
     }
   };
-  useEffect(() => {
-    console.log(fetchLoanDetailInfo.loanInfoHistory,fetchLoanDetailInfo.filteredData);
-  }, [fetchLoanDetailInfo.loanInfoHistory]);
   return (
     <div
       className="loan-history-container"
       style={{ width: '100%', height: '100%' }}
     >
-      <Button onClick={() => history.back()}>{'< Quay lại'}</Button>
-      <h2>Lịch sử vay vốn</h2>
-
       {/* Bộ lọc trạng thái */}
       <div className="filter-container" style={{ marginBottom: 10 }}>
         <Select
@@ -110,11 +94,15 @@ const LoanHistory: React.FC = () => {
               xs={24}
               sm={12}
               md={8}
-              lg={6}
+              lg={24}
               key={loan.loanDetailInfoId}
-              style={{ maxWidth: '100%' }}
+              style={{}}
             >
-              <Card hoverable className="loan-card">
+              <Card
+                hoverable
+                className="loan-card"
+                style={{ width: '100%', margin: 0, padding: 0 }}
+              >
                 <div className="loan-info">
                   <h3 className="loan-title">{loan.loanProductName}</h3>
                   <p>
@@ -133,19 +121,15 @@ const LoanHistory: React.FC = () => {
                       {loan.requestStatus}
                     </span>
                   </p>
-                  {loan.requestStatus === 'APPROVED' && (
-                    <p>
-                      <strong>🕒 Trạng thái khoản vay:</strong>{' '}
-                      <LoanStatusTag status={loan.loanStatus} />
-                    </p>
-                  )}
+                  <strong>🕒 Trạng thái khoản vay:</strong>{' '}
+                  <LoanStatusTag status={loan.loanStatus} />
                   <p>
                     <strong>🕒 Ngày đăng ký vay:</strong> {loan.createdDate}
                   </p>
                 </div>
-                <div className="loan-actions">
+                {/* <div className="loan-actions">
                   <button className="detail-button">Xem chi tiết</button>
-                </div>
+                </div> */}
               </Card>
             </Col>
           ))}

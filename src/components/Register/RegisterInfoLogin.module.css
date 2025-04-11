@@ -6,7 +6,8 @@
 
 .form {
   width: 400px;
-  padding: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
   /* background: white; */
   text-align: center;
   transition: 0.3s;
@@ -54,6 +55,7 @@
   cursor: pointer;
   transition: 0.3s;
   margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 .button:hover {

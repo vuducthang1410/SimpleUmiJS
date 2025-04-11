@@ -24,3 +24,6 @@ export const formatCurrency = (value: string) => {
     currency: "VND",
   }).format(Number(numericValue));
 };
+export const truncateText = (text: string, maxLength: number) => {
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+};

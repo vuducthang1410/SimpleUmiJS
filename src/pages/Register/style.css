@@ -8,35 +8,40 @@
   --border-radius: 12px;
 }
 
+@media (max-width: 575px) {
+  .step-container {
+    display: none;
+  }
+}
 /* Căn giữa toàn bộ form */
 .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--background-color);
-  padding: 20px;
-  height: 100vh;
+  min-height: 100vh;
   overflow-x: scroll;
-  /* margin: 15px; */
-  min-height: 750px;
 }
 
 /* Card chứa các bước đăng ký */
 .register-card {
-  width: 450px;
-  padding: 25px;
+  max-width: 400px;
+  width: 90%;
   border-radius: var(--border-radius);
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
   text-align: center;
+  margin: 15px;
 }
-
-Ô chứa nội dung form
-.content-box {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-  background: #fafafa;
+@media (max-width: 768px) {
+  .register-card {
+    box-shadow: none;
+  }
+}
+/* Ô chứa nội dung form */
+.step-container {
+  margin-top: 25px;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 /* Nhóm nút điều hướng */
@@ -45,6 +50,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
+  /* margin-bottom: 15px; */
 }
 
 /* Nút Previous */
@@ -52,8 +58,26 @@
   background-color: #ddd;
   border: none;
   color: var(--text-color);
+  margin-bottom: 15px;
 }
 
 .prev-button:hover {
   background-color: #ccc;
+  margin-bottom: 15px;
+}
+.login-link {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+.login-link a {
+  color: #ff8e2e;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.login-link a:hover {
+  color: #b95a02;
 }

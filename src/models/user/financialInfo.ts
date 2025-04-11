@@ -76,7 +76,6 @@ const useFinancialInfo: FinancialInfoModel = {
     },
     *fetchFinancialInfo({ payload, callback }, { call, put, select }): Generator<any, void, any> {
       try {
-        console.log("first")
         const response = yield call(getDetailFinancialInfoByCifCode, payload?.cifCode || '');
         console.log(response)
         yield put({

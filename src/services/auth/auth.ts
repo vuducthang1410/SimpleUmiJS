@@ -1,8 +1,8 @@
 import { DataLogin, DataLoginResponse } from "@/types/DataToken";
-import { ApiCustomerInfoResponse, RegisterDataForm } from "@/types/User";
+import { ApiCustomerInfoResponse, ApiProvinceResponse, RegisterDataForm } from "@/types/User";
 import { handleApiError } from "@/utils/error";
 import APIConfig from "@/utils/URL"
-import {request } from "@umijs/max";
+import { request } from "@umijs/max";
 
 export async function login(dataLogin: DataLogin) {
   try {
@@ -38,7 +38,7 @@ export async function getInfoCustomer(token: string) {
     await handleApiError(error)
   }
 }
-export async function registerInfoCustomer(regsterInfoData:FormData) {
+export async function registerInfoCustomer(regsterInfoData: FormData) {
   try {
     return request<ApiCustomerInfoResponse>(
       APIConfig.CUSTOMER_URL + '/users/create',
@@ -47,7 +47,38 @@ export async function registerInfoCustomer(regsterInfoData:FormData) {
         headers: {
           'Content-Type': 'application/json',
         },
-        data:regsterInfoData
+        data: regsterInfoData
+      }
+    )
+  } catch (error) {
+    await handleApiError(error)
+  }
+}
+export async function getProvince() {
+  try {
+    return request<ApiProvinceResponse>(
+      APIConfig.CUSTOMER_URL + '/users/get-all-province',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+  } catch (error) {
+    await handleApiError(error)
+  }
+}
+export async function verifyAccount(code: string, mail: string) {
+  try {
+    return request<ApiProvinceResponse>(
+      APIConfig.CUSTOMER_URL + '/auth/verify',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        params: { code: code, mail: mail }
       }
     )
   } catch (error) {

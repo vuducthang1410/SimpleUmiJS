@@ -70,19 +70,19 @@ export default function LoanProductDetailDrawer({
           <label style={{ fontSize: 16, fontWeight: 500 }}>
             {'Mô tả sản phẩm: '}
           </label>
-          {loanProductResponse.productDescription}
+          <p dangerouslySetInnerHTML={{__html:loanProductResponse.productDescription}}/>
         </p>
         <p>
           <label style={{ fontSize: 16, fontWeight: 500 }}>
             {'Điều kiện vay: '}
           </label>
-          {loanProductResponse.loanCondition}
+          <p dangerouslySetInnerHTML={{__html:loanProductResponse.loanCondition}}/>
         </p>
         <p>
           <label style={{ fontSize: 16, fontWeight: 500 }}>
             {'Tiện ích sản phẩm: '}
           </label>
-          {loanProductResponse.utilities}
+          <p dangerouslySetInnerHTML={{__html:loanProductResponse.utilities}}/>
         </p>
         <Descriptions title="Thông tin chi tiết" bordered column={1}>
           <Descriptions.Item label="Hình thức vay">

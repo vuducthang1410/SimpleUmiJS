@@ -166,7 +166,7 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
         ...state, fetchLoanDetailInfo: {
           ...state.fetchLoanDetailInfo,
           loanInfoHistory: payload.loanInfoHistory,
-          filteredData: payload.loanInfoHistory.length
+          filteredData: payload.totalRecord
         }
       }
     }
@@ -209,7 +209,8 @@ const useLoanDetailInfo: LoanDetailInfoModel = {
         );
         yield put({
           type: 'setLoanInfoHistory', payload: {
-            loanInfoHistory: response.data.loanDetailInfoRpList
+            loanInfoHistory: response.data.loanDetailInfoRpList,
+            totalRecord:response.data.totalRecord
           }
         })
         yield put({ type: 'setLoading', payload: false });

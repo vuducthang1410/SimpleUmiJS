@@ -22,7 +22,7 @@ const LoanCard: React.FC<LoanProps> = ({ loan, showModal, dispatch, showDetailMo
         });
     }
     return (
-        <Card hoverable className="loan-card">
+        <Card hoverable className="loan-card" style={{padding:0,margin:0,width:'100%',maxWidth:450}}>
             {/* Header */}
             <div className="loan-header">
                 <CreditCardOutlined className="loan-icon" />

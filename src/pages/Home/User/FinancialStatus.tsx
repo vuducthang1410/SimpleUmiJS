@@ -308,7 +308,7 @@ const FinancialStatusStepForm: React.FC = () => {
                   <span
                     style={{ display: 'flex', alignItems: 'center', gap: 5 }}
                   >
-                    <ExclamationCircleOutlined />{' '}
+                    <ExclamationCircleOutlined />
                     <label>Trạng thái hết hạn</label>
                   </span>
                 }

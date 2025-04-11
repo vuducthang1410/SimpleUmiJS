@@ -2,6 +2,8 @@ import { DataCallback } from '@/types/InterestRate';
 import { ApplicableObjects, LoanForm, LoanProduct } from '@/types/LoanProduct';
 import useLoanProductForm from '@/utils/HandleLoanProductForm';
 import { useDispatch } from '@umijs/max';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {
   Button,
   Col,
@@ -15,6 +17,7 @@ import {
 } from 'antd';
 
 const { Option } = Select;
+
 interface DataProps {
   visible: boolean;
   onClose: () => void;
@@ -25,11 +28,10 @@ const LoanProductCreateModal: React.FC<DataProps> = ({ visible, onClose }) => {
   const { newLoanProduct, handleInputChange } = useLoanProductForm();
   const [form] = Form.useForm();
 
-  const handleSubmit = (values: LoanProduct) => {
-    console.log('Dữ liệu sản phẩm vay:', values);
+  const handleSubmit = () => {
     dispatch({
       type: 'loanProduct/createNewLoanProduct',
-      payload: values,
+      payload: newLoanProduct,
       callback: (response: DataCallback) => {
         if (response.isSuccess) {
           message.success(response.message);
@@ -38,8 +40,8 @@ const LoanProductCreateModal: React.FC<DataProps> = ({ visible, onClose }) => {
         }
       },
     });
-    form.resetFields(); // Reset form sau khi submit
-    onClose(); // Đóng modal
+    form.resetFields();
+    onClose();
     dispatch({
       type: 'loanProduct/fetchLoanProducts',
       payload: { active: false, pageNumber: 0, pageSize: 10 },
@@ -93,28 +95,40 @@ const LoanProductCreateModal: React.FC<DataProps> = ({ visible, onClose }) => {
           </Col>
         </Row>
 
-        <Form.Item
-          label="Mô tả"
-          name="description"
-          rules={[{ required: true }]}
-        >
-          <Input.TextArea
-            value={newLoanProduct.description}
-            onChange={(e) => handleInputChange('description', e.target.value)}
+        {/* CKEditor cho phần Mô tả */}
+        <Form.Item label="Mô tả" name="description" rules={[{ required: true }]}>
+          <CKEditor
+            editor={ClassicEditor}
+            data={newLoanProduct.description}
+            onChange={(event, editor) => {
+              const data = editor.getData(); // Lấy dữ liệu dạng string
+              console.log("Dữ liệu CKEditor:", data); // Kiểm tra output
+              handleInputChange("description", data); // Lưu vào state
+            }}
           />
         </Form.Item>
 
+        {/* CKEditor cho phần Tiện ích */}
         <Form.Item label="Tiện ích" name="utilities">
-          <Input.TextArea
-            value={newLoanProduct.utilities}
-            onChange={(e) => handleInputChange('utilities', e.target.value)}
+          <CKEditor
+            editor={ClassicEditor}
+            data={newLoanProduct.utilities}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              handleInputChange('utilities', data);
+            }}
           />
         </Form.Item>
 
+        {/* CKEditor cho phần Điều kiện vay */}
         <Form.Item label="Điều kiện vay" name="loanCondition">
-          <Input.TextArea
-            value={newLoanProduct.loanCondition}
-            onChange={(e) => handleInputChange('loanCondition', e.target.value)}
+          <CKEditor
+            editor={ClassicEditor}
+            data={newLoanProduct.loanCondition}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              handleInputChange('loanCondition', data);
+            }}
           />
         </Form.Item>
 

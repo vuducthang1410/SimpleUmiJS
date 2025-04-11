@@ -12,7 +12,7 @@ const LoanInfoDetailPaymentModal = lazy(
   () => import('@/components/LoanInfo/LoanInfoDetailPaymentModal'),
 );
 
-const pageSize = 3; // Số thẻ trên mỗi trang
+const pageSize = 4; // Số thẻ trên mỗi trang
 
 const LoanList: React.FC = () => {
   const dispatch = useDispatch();
@@ -69,7 +69,7 @@ const LoanList: React.FC = () => {
               <Empty description="Không có khoản vay nào đang vay" />
             </div>
           ) : (
-            <Row gutter={[24, 24]} justify="start">
+            <Row gutter={[24, 24]} justify="start" style={{padding:0,margin:10}}>
               {loanDetailInfoList.map(
                 (loan: LoanDetailActiveRp, index: number) => (
                   <Col key={index} xs={24} sm={12} md={12} lg={12}>

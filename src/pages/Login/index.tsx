@@ -44,11 +44,13 @@ const Login: React.FC = () => {
     <div
       className="login-page"
       style={{
-        width: '100%',
+        // width: '100%',
         height: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        marginLeft:20,
+        marginRight:20
       }}
     >
       <div className="login-container">

@@ -107,7 +107,6 @@ export async function getLoanInfoHistoryByCifCode(
   LoanInfoHistoryRq: LoanInfoHistoryRq,
 ) {
   try {
-    console.log('first', LoanInfoHistoryRq);
     return await request<BaseResponse>(
       APIConfig.LOAN_URL + '/loan-detail-info/get-all-loan-info-by-cif-code',
       {
